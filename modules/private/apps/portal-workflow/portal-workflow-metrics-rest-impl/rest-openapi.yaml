@@ -165,6 +165,19 @@ components:
                     format: int64
                     type: integer
             type: object
+        Role:
+            description: https://www.schema.org/Role
+            properties:
+                id:
+                    description: The role's ID.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                name:
+                    description: The role's name.
+                    readOnly: true
+                    type: string
+            type: object
         SLA:
             description: https://www.schema.org/SLA
             properties:
@@ -574,6 +587,31 @@ paths:
                                 type: array
                     description: ""
             tags: ["Node"]
+    "/processes/{processId}/roles":
+        get:
+            operationId: getProcessRolesPage
+            parameters:
+                - in: path
+                  name: processId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Role"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Role"
+                                type: array
+                    description: ""
+            tags: ["Role"]
     "/processes/{processId}/slas":
         get:
             operationId: getProcessSLAsPage
