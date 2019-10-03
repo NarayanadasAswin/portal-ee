@@ -76,6 +76,8 @@ public class OpenAPIResourceImpl {
 
 			add(ProcessResourceImpl.class);
 
+			add(RoleResourceImpl.class);
+
 			add(SLAResourceImpl.class);
 
 			add(TaskResourceImpl.class);

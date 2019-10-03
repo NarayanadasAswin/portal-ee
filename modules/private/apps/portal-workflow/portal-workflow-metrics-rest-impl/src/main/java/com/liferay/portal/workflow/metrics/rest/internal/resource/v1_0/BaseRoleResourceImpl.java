@@ -17,13 +17,11 @@ package com.liferay.portal.workflow.metrics.rest.internal.resource.v1_0;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.pagination.Page;
-import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.util.TransformUtil;
-import com.liferay.portal.workflow.metrics.rest.dto.v1_0.AssigneeUser;
-import com.liferay.portal.workflow.metrics.rest.resource.v1_0.AssigneeUserResource;
+import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Role;
+import com.liferay.portal.workflow.metrics.rest.resource.v1_0.RoleResource;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -45,8 +43,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -55,37 +51,22 @@ import javax.ws.rs.core.UriInfo;
  */
 @Generated("")
 @Path("/v1.0")
-public abstract class BaseAssigneeUserResourceImpl
-	implements AssigneeUserResource {
+public abstract class BaseRoleResourceImpl implements RoleResource {
 
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/portal-workflow-metrics/v1.0/processes/{processId}/assignee-users'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/portal-workflow-metrics/v1.0/processes/{processId}/roles'  -u 'test@liferay.com:test'
 	 */
 	@Override
 	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.PATH, name = "processId"),
-			@Parameter(in = ParameterIn.QUERY, name = "key"),
-			@Parameter(in = ParameterIn.QUERY, name = "roleIds"),
-			@Parameter(in = ParameterIn.QUERY, name = "taskKeys"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sort")
-		}
-	)
-	@Path("/processes/{processId}/assignee-users")
+	@Parameters(value = {@Parameter(in = ParameterIn.PATH, name = "processId")})
+	@Path("/processes/{processId}/roles")
 	@Produces({"application/json", "application/xml"})
-	@Tags(value = {@Tag(name = "AssigneeUser")})
-	public Page<AssigneeUser> getProcessAssigneeUsersPage(
+	@Tags(value = {@Tag(name = "Role")})
+	public Page<Role> getProcessRolesPage(
 			@NotNull @Parameter(hidden = true) @PathParam("processId") Long
-				processId,
-			@Parameter(hidden = true) @QueryParam("key") String key,
-			@Parameter(hidden = true) @QueryParam("roleIds") Long[] roleIds,
-			@Parameter(hidden = true) @QueryParam("taskKeys") String[] taskKeys,
-			@Context Pagination pagination, @Context Sort[] sorts)
+				processId)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -119,8 +100,7 @@ public abstract class BaseAssigneeUserResourceImpl
 		this.contextUser = contextUser;
 	}
 
-	protected void preparePatch(
-		AssigneeUser assigneeUser, AssigneeUser existingAssigneeUser) {
+	protected void preparePatch(Role role, Role existingRole) {
 	}
 
 	protected <T, R> List<R> transform(

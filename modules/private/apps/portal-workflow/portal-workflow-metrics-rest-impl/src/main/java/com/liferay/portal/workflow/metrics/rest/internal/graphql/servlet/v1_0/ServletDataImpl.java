@@ -23,6 +23,7 @@ import com.liferay.portal.workflow.metrics.rest.resource.v1_0.InstanceResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.MetricResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.NodeResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.ProcessResource;
+import com.liferay.portal.workflow.metrics.rest.resource.v1_0.RoleResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.SLAResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.TaskResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.TimeRangeResource;
@@ -61,6 +62,8 @@ public class ServletDataImpl implements ServletData {
 			_nodeResourceComponentServiceObjects);
 		Query.setProcessResourceComponentServiceObjects(
 			_processResourceComponentServiceObjects);
+		Query.setRoleResourceComponentServiceObjects(
+			_roleResourceComponentServiceObjects);
 		Query.setSLAResourceComponentServiceObjects(
 			_slaResourceComponentServiceObjects);
 		Query.setTaskResourceComponentServiceObjects(
@@ -115,6 +118,10 @@ public class ServletDataImpl implements ServletData {
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private ComponentServiceObjects<ProcessResource>
 		_processResourceComponentServiceObjects;
+
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private ComponentServiceObjects<RoleResource>
+		_roleResourceComponentServiceObjects;
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private ComponentServiceObjects<TaskResource>

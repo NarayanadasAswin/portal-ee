@@ -14,11 +14,10 @@
 
 package com.liferay.portal.workflow.metrics.rest.client.resource.v1_0;
 
-import com.liferay.portal.workflow.metrics.rest.client.dto.v1_0.AssigneeUser;
+import com.liferay.portal.workflow.metrics.rest.client.dto.v1_0.Role;
 import com.liferay.portal.workflow.metrics.rest.client.http.HttpInvoker;
 import com.liferay.portal.workflow.metrics.rest.client.pagination.Page;
-import com.liferay.portal.workflow.metrics.rest.client.pagination.Pagination;
-import com.liferay.portal.workflow.metrics.rest.client.serdes.v1_0.AssigneeUserSerDes;
+import com.liferay.portal.workflow.metrics.rest.client.serdes.v1_0.RoleSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -32,20 +31,16 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public interface AssigneeUserResource {
+public interface RoleResource {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public Page<AssigneeUser> getProcessAssigneeUsersPage(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
-			Pagination pagination, String sortString)
-		throws Exception;
+	public Page<Role> getProcessRolesPage(Long processId) throws Exception;
 
-	public HttpInvoker.HttpResponse getProcessAssigneeUsersPageHttpResponse(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
-			Pagination pagination, String sortString)
+	public HttpInvoker.HttpResponse getProcessRolesPageHttpResponse(
+			Long processId)
 		throws Exception;
 
 	public static class Builder {
@@ -57,8 +52,8 @@ public interface AssigneeUserResource {
 			return this;
 		}
 
-		public AssigneeUserResource build() {
-			return new AssigneeUserResourceImpl(this);
+		public RoleResource build() {
+			return new RoleResourceImpl(this);
 		}
 
 		public Builder endpoint(String host, int port, String scheme) {
@@ -101,17 +96,11 @@ public interface AssigneeUserResource {
 
 	}
 
-	public static class AssigneeUserResourceImpl
-		implements AssigneeUserResource {
+	public static class RoleResourceImpl implements RoleResource {
 
-		public Page<AssigneeUser> getProcessAssigneeUsersPage(
-				Long processId, String key, Long[] roleIds, String[] taskKeys,
-				Pagination pagination, String sortString)
-			throws Exception {
-
+		public Page<Role> getProcessRolesPage(Long processId) throws Exception {
 			HttpInvoker.HttpResponse httpResponse =
-				getProcessAssigneeUsersPageHttpResponse(
-					processId, key, roleIds, taskKeys, pagination, sortString);
+				getProcessRolesPageHttpResponse(processId);
 
 			String content = httpResponse.getContent();
 
@@ -121,12 +110,11 @@ public interface AssigneeUserResource {
 			_logger.fine(
 				"HTTP response status code: " + httpResponse.getStatusCode());
 
-			return Page.of(content, AssigneeUserSerDes::toDTO);
+			return Page.of(content, RoleSerDes::toDTO);
 		}
 
-		public HttpInvoker.HttpResponse getProcessAssigneeUsersPageHttpResponse(
-				Long processId, String key, Long[] roleIds, String[] taskKeys,
-				Pagination pagination, String sortString)
+		public HttpInvoker.HttpResponse getProcessRolesPageHttpResponse(
+				Long processId)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -150,39 +138,10 @@ public interface AssigneeUserResource {
 
 			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
 
-			if (key != null) {
-				httpInvoker.parameter("key", String.valueOf(key));
-			}
-
-			if (roleIds != null) {
-				for (int i = 0; i < roleIds.length; i++) {
-					httpInvoker.parameter(
-						"roleIds", String.valueOf(roleIds[i]));
-				}
-			}
-
-			if (taskKeys != null) {
-				for (int i = 0; i < taskKeys.length; i++) {
-					httpInvoker.parameter(
-						"taskKeys", String.valueOf(taskKeys[i]));
-				}
-			}
-
-			if (pagination != null) {
-				httpInvoker.parameter(
-					"page", String.valueOf(pagination.getPage()));
-				httpInvoker.parameter(
-					"pageSize", String.valueOf(pagination.getPageSize()));
-			}
-
-			if (sortString != null) {
-				httpInvoker.parameter("sort", sortString);
-			}
-
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/portal-workflow-metrics/v1.0/processes/{processId}/assignee-users",
+						"/o/portal-workflow-metrics/v1.0/processes/{processId}/roles",
 				processId);
 
 			httpInvoker.userNameAndPassword(
@@ -191,12 +150,12 @@ public interface AssigneeUserResource {
 			return httpInvoker.invoke();
 		}
 
-		private AssigneeUserResourceImpl(Builder builder) {
+		private RoleResourceImpl(Builder builder) {
 			_builder = builder;
 		}
 
 		private static final Logger _logger = Logger.getLogger(
-			AssigneeUserResource.class.getName());
+			RoleResource.class.getName());
 
 		private Builder _builder;
 

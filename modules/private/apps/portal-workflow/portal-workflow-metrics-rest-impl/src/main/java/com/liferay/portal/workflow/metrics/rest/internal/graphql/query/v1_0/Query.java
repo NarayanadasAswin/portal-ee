@@ -32,6 +32,7 @@ import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Instance;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Metric;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Node;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Process;
+import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Role;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.SLA;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.Task;
 import com.liferay.portal.workflow.metrics.rest.dto.v1_0.TimeRange;
@@ -41,6 +42,7 @@ import com.liferay.portal.workflow.metrics.rest.resource.v1_0.InstanceResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.MetricResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.NodeResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.ProcessResource;
+import com.liferay.portal.workflow.metrics.rest.resource.v1_0.RoleResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.SLAResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.TaskResource;
 import com.liferay.portal.workflow.metrics.rest.resource.v1_0.TimeRangeResource;
@@ -112,6 +114,14 @@ public class Query {
 			processResourceComponentServiceObjects;
 	}
 
+	public static void setRoleResourceComponentServiceObjects(
+		ComponentServiceObjects<RoleResource>
+			roleResourceComponentServiceObjects) {
+
+		_roleResourceComponentServiceObjects =
+			roleResourceComponentServiceObjects;
+	}
+
 	public static void setSLAResourceComponentServiceObjects(
 		ComponentServiceObjects<SLAResource>
 			slaResourceComponentServiceObjects) {
@@ -139,11 +149,13 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {processAssigneeUsers(page: ___, pageSize: ___, processId: ___, sorts: ___, taskKeys: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {processAssigneeUsers(key: ___, page: ___, pageSize: ___, processId: ___, roleIds: ___, sorts: ___, taskKeys: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField
 	public AssigneeUserPage processAssigneeUsers(
 			@GraphQLName("processId") Long processId,
+			@GraphQLName("key") String key,
+			@GraphQLName("roleIds") Long[] roleIds,
 			@GraphQLName("taskKeys") String[] taskKeys,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -155,7 +167,8 @@ public class Query {
 			this::_populateResourceContext,
 			assigneeUserResource -> new AssigneeUserPage(
 				assigneeUserResource.getProcessAssigneeUsersPage(
-					processId, taskKeys, Pagination.of(page, pageSize),
+					processId, key, roleIds, taskKeys,
+					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(
 						assigneeUserResource, sortsString))));
 	}
@@ -310,6 +323,22 @@ public class Query {
 			_processResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			processResource -> processResource.getProcessTitle(processId));
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {processRoles(processId: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 */
+	@GraphQLField
+	public RolePage processRoles(@GraphQLName("processId") Long processId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_roleResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			roleResource -> new RolePage(
+				roleResource.getProcessRolesPage(processId)));
 	}
 
 	/**
@@ -554,6 +583,30 @@ public class Query {
 
 	}
 
+	@GraphQLName("RolePage")
+	public class RolePage {
+
+		public RolePage(Page rolePage) {
+			items = rolePage.getItems();
+			page = rolePage.getPage();
+			pageSize = rolePage.getPageSize();
+			totalCount = rolePage.getTotalCount();
+		}
+
+		@GraphQLField
+		protected java.util.Collection<Role> items;
+
+		@GraphQLField
+		protected long page;
+
+		@GraphQLField
+		protected long pageSize;
+
+		@GraphQLField
+		protected long totalCount;
+
+	}
+
 	@GraphQLName("SLAPage")
 	public class SLAPage {
 
@@ -713,6 +766,17 @@ public class Query {
 		processResource.setContextUser(_user);
 	}
 
+	private void _populateResourceContext(RoleResource roleResource)
+		throws Exception {
+
+		roleResource.setContextAcceptLanguage(_acceptLanguage);
+		roleResource.setContextCompany(_company);
+		roleResource.setContextHttpServletRequest(_httpServletRequest);
+		roleResource.setContextHttpServletResponse(_httpServletResponse);
+		roleResource.setContextUriInfo(_uriInfo);
+		roleResource.setContextUser(_user);
+	}
+
 	private void _populateResourceContext(SLAResource slaResource)
 		throws Exception {
 
@@ -758,6 +822,8 @@ public class Query {
 		_nodeResourceComponentServiceObjects;
 	private static ComponentServiceObjects<ProcessResource>
 		_processResourceComponentServiceObjects;
+	private static ComponentServiceObjects<RoleResource>
+		_roleResourceComponentServiceObjects;
 	private static ComponentServiceObjects<SLAResource>
 		_slaResourceComponentServiceObjects;
 	private static ComponentServiceObjects<TaskResource>
