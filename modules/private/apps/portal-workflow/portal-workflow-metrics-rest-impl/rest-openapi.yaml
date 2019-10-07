@@ -396,6 +396,17 @@ paths:
                       format: int64
                       type: integer
                 - in: query
+                  name: key
+                  schema:
+                      type: string
+                - in: query
+                  name: roleIds
+                  schema:
+                      items:
+                          format: int64
+                          type: integer
+                      type: array
+                - in: query
                   name: taskKeys
                   schema:
                       items:
