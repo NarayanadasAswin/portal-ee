@@ -16,8 +16,14 @@ package com.liferay.portal.workflow.metrics.rest.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.function.UnsafeSupplier;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
@@ -133,7 +139,10 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 				}
 			});
 
-		AssigneeUser assigneeUser2 = randomAssigneeUser();
+		Role siteAdministrationRole = _roleLocalService.getRole(
+			TestPropsValues.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
+
+		AssigneeUser assigneeUser2 = randomAssigneeUser(siteAdministrationRole);
 
 		assigneeUser2.setOnTimeTaskCount(1L);
 		assigneeUser2.setOverdueTaskCount(0L);
@@ -154,8 +163,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 
 		Page<AssigneeUser> page =
 			assigneeUserResource.getProcessAssigneeUsersPage(
-				_process.getId(), new String[] {"update"}, Pagination.of(1, 10),
-				"taskCount:asc");
+				_process.getId(), null, null, new String[] {"update"},
+				Pagination.of(1, 10), "taskCount:asc");
 
 		Assert.assertEquals(1, page.getTotalCount());
 
@@ -173,8 +182,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 			(List<AssigneeUser>)page.getItems());
 
 		page = assigneeUserResource.getProcessAssigneeUsersPage(
-			_process.getId(), new String[] {"review"}, Pagination.of(1, 10),
-			"overdueTaskCount:desc");
+			_process.getId(), null, null, new String[] {"review"},
+			Pagination.of(1, 10), "overdueTaskCount:desc");
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -199,6 +208,56 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 					}
 				}),
 			(List<AssigneeUser>)page.getItems());
+
+		page = assigneeUserResource.getProcessAssigneeUsersPage(
+			_process.getId(), null,
+			new Long[] {siteAdministrationRole.getRoleId()},
+			new String[] {"review"}, Pagination.of(1, 10),
+			"overdueTaskCount:desc");
+
+		Assert.assertEquals(1, page.getTotalCount());
+
+		assertEquals(
+			Arrays.asList(
+				new AssigneeUser() {
+					{
+						id = assigneeUser2.getId();
+						name = assigneeUser2.getName();
+						taskCount = 1L;
+						onTimeTaskCount = 1L;
+						overdueTaskCount = 0L;
+					}
+				}),
+			(List<AssigneeUser>)page.getItems());
+
+		page = assigneeUserResource.getProcessAssigneeUsersPage(
+			_process.getId(), assigneeUser2.getName(),
+			new Long[] {siteAdministrationRole.getRoleId()},
+			new String[] {"review"}, Pagination.of(1, 10),
+			"overdueTaskCount:desc");
+
+		Assert.assertEquals(1, page.getTotalCount());
+
+		assertEquals(
+			Arrays.asList(
+				new AssigneeUser() {
+					{
+						id = assigneeUser2.getId();
+						name = assigneeUser2.getName();
+						taskCount = 1L;
+						onTimeTaskCount = 1L;
+						overdueTaskCount = 0L;
+					}
+				}),
+			(List<AssigneeUser>)page.getItems());
+
+		page = assigneeUserResource.getProcessAssigneeUsersPage(
+			_process.getId(), assigneeUser1.getName(),
+			new Long[] {siteAdministrationRole.getRoleId()},
+			new String[] {"review"}, Pagination.of(1, 10),
+			"overdueTaskCount:desc");
+
+		Assert.assertEquals(0, page.getTotalCount());
 	}
 
 	@Override
@@ -240,7 +299,6 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		};
 	}
 
-	@Override
 	protected AssigneeUser randomAssigneeUser() throws Exception {
 		User user = UserTestUtil.addUser();
 
@@ -259,6 +317,14 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 				taskCount = 1L;
 			}
 		};
+	}
+
+	protected AssigneeUser randomAssigneeUser(Role role) throws Exception {
+		AssigneeUser assigneeUser = randomAssigneeUser();
+
+		_addRoleUser(role, assigneeUser.getId());
+
+		return assigneeUser;
 	}
 
 	@Override
@@ -309,6 +375,14 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		return _process.getId();
 	}
 
+	private void _addRoleUser(Role role, long userId) throws Exception {
+		_userLocalService.addRoleUser(role.getRoleId(), userId);
+
+		_userGroupRoleLocalService.addUserGroupRoles(
+			new long[] {userId}, TestPropsValues.getGroupId(),
+			role.getRoleId());
+	}
+
 	private void _deleteSLATaskResults() throws Exception {
 		_workflowMetricsRESTTestHelper.deleteSLATaskResults(
 			testGroup.getCompanyId(), _process.getId());
@@ -343,6 +417,16 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 	private Portal _portal;
 
 	private Process _process;
+
+	@Inject
+	private RoleLocalService _roleLocalService;
+
 	private final List<Task> _tasks = new ArrayList<>();
+
+	@Inject
+	private UserGroupRoleLocalService _userGroupRoleLocalService;
+
+	@Inject
+	private UserLocalService _userLocalService;
 
 }
