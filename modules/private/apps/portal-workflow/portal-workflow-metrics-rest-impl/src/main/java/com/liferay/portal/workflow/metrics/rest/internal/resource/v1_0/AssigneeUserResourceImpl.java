@@ -16,16 +16,22 @@ package com.liferay.portal.workflow.metrics.rest.internal.resource.v1_0;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Sort;
-import com.liferay.portal.kernel.service.UserService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.search.aggregation.AggregationResult;
 import com.liferay.portal.search.aggregation.Aggregations;
@@ -63,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -90,14 +97,22 @@ public class AssigneeUserResourceImpl
 
 	@Override
 	public Page<AssigneeUser> getProcessAssigneeUsersPage(
-			Long processId, String[] taskKeys, Pagination pagination,
-			Sort[] sorts)
+			Long processId, String key, Long[] roleIds, String[] taskKeys,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
+
+		Set<Long> userIds = _getUserIds(key, roleIds);
+
+		if ((Validator.isNotNull(key) || ArrayUtil.isNotEmpty(roleIds)) &&
+			userIds.isEmpty()) {
+
+			return Page.of(Collections.emptyList());
+		}
 
 		FieldSort fieldSort = _toFieldSort(sorts);
 
 		Map<Long, AssigneeUser> assigneeUsersMap = _getAssigneeUsersMap(
-			fieldSort, pagination, processId, taskKeys);
+			fieldSort, pagination, processId, taskKeys, userIds);
 
 		if (!assigneeUsersMap.isEmpty()) {
 			if (pagination == null) {
@@ -106,16 +121,32 @@ public class AssigneeUserResourceImpl
 
 			return Page.of(
 				_getAssigneeUsers(
-					assigneeUsersMap, fieldSort, processId, taskKeys,
+					assigneeUsersMap, fieldSort, processId, taskKeys, userIds,
 					pagination),
-				pagination, _getAssigneeUsersCount(processId, taskKeys));
+				pagination,
+				_getAssigneeUsersCount(processId, taskKeys, userIds));
 		}
 
 		return Page.of(Collections.emptyList());
 	}
 
+	private TermsQuery _createAssigneeIdTermsQuery(Set<Long> userIds) {
+		TermsQuery termsQuery = _queries.terms("assigneeId");
+
+		Stream<Long> stream = userIds.stream();
+
+		termsQuery.addValues(
+			stream.map(
+				String::valueOf
+			).toArray(
+				Object[]::new
+			));
+
+		return termsQuery;
+	}
+
 	private BooleanQuery _createSLATaskResultsBooleanQuery(
-		long processId, String[] taskKeys) {
+		Set<Long> assigneeIdsSet, long processId, String[] taskKeys) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
@@ -128,6 +159,9 @@ public class AssigneeUserResourceImpl
 			booleanQuery.addMustQueryClauses(
 				_createTaskNameTermsQuery(taskKeys));
 		}
+
+		booleanQuery.addMustQueryClauses(
+			_createAssigneeIdTermsQuery(assigneeIdsSet));
 
 		return booleanQuery.addMustQueryClauses(
 			_queries.term("companyId", contextCompany.getCompanyId()),
@@ -144,7 +178,7 @@ public class AssigneeUserResourceImpl
 	}
 
 	private BooleanQuery _createTokensBooleanQuery(
-		long processId, String[] taskKeys) {
+		long processId, String[] taskKeys, Set<Long> userIds) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
@@ -153,6 +187,11 @@ public class AssigneeUserResourceImpl
 		if (taskKeys.length > 0) {
 			booleanQuery.addMustQueryClauses(
 				_createTaskNameTermsQuery(taskKeys));
+		}
+
+		if (!userIds.isEmpty()) {
+			booleanQuery.addMustQueryClauses(
+				_createAssigneeIdTermsQuery(userIds));
 		}
 
 		return booleanQuery.addMustQueryClauses(
@@ -164,15 +203,21 @@ public class AssigneeUserResourceImpl
 
 	private Collection<AssigneeUser> _getAssigneeUsers(
 			Map<Long, AssigneeUser> assigneeUsersMap, FieldSort fieldSort,
-			Long processId, String[] taskKeys, Pagination pagination)
+			Long processId, String[] taskKeys, Set<Long> userIds,
+			Pagination pagination)
 		throws Exception {
 
 		List<AssigneeUser> assigneeUsers = new LinkedList<>();
 
+		Set<Long> assigneIds = assigneeUsersMap.keySet();
+
+		if (!userIds.isEmpty()) {
+			assigneIds = SetUtil.intersect(userIds, assigneeUsersMap.keySet());
+		}
+
 		TermsAggregationResult slaTermsAggregationResult =
 			_getSLATermsAggregationResult(
-				assigneeUsersMap.keySet(), fieldSort, pagination, processId,
-				taskKeys);
+				assigneIds, fieldSort, pagination, processId, taskKeys);
 
 		if (_isOrderByTaskCount(fieldSort.getField())) {
 			assigneeUsersMap.forEach(
@@ -203,7 +248,8 @@ public class AssigneeUserResourceImpl
 		return assigneeUsers;
 	}
 
-	private long _getAssigneeUsersCount(long processId, String[] taskKeys)
+	private long _getAssigneeUsersCount(
+			long processId, String[] taskKeys, Set<Long> userIds)
 		throws Exception {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
@@ -216,7 +262,7 @@ public class AssigneeUserResourceImpl
 		searchSearchRequest.setIndexNames("workflow-metrics-tokens");
 
 		searchSearchRequest.setQuery(
-			_createTokensBooleanQuery(processId, taskKeys));
+			_createTokensBooleanQuery(processId, taskKeys, userIds));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
@@ -233,7 +279,7 @@ public class AssigneeUserResourceImpl
 
 	private Map<Long, AssigneeUser> _getAssigneeUsersMap(
 			FieldSort fieldSort, Pagination pagination, long processId,
-			String[] taskKeys)
+			String[] taskKeys, Set<Long> userIds)
 		throws Exception {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
@@ -259,7 +305,7 @@ public class AssigneeUserResourceImpl
 		searchSearchRequest.setIndexNames("workflow-metrics-tokens");
 
 		searchSearchRequest.setQuery(
-			_createTokensBooleanQuery(processId, taskKeys));
+			_createTokensBooleanQuery(processId, taskKeys, userIds));
 
 		Stream<AssigneeUser> stream = Stream.of(
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest)
@@ -331,7 +377,8 @@ public class AssigneeUserResourceImpl
 
 		searchSearchRequest.setIndexNames("workflow-metrics-sla-task-results");
 		searchSearchRequest.setQuery(
-			_createSLATaskResultsBooleanQuery(processId, taskKeys));
+			_createSLATaskResultsBooleanQuery(
+				assigneeIdsSet, processId, taskKeys));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
@@ -352,6 +399,31 @@ public class AssigneeUserResourceImpl
 				"taskCount");
 
 		return GetterUtil.getLong(valueCountAggregationResult.getValue());
+	}
+
+	private Set<Long> _getUserIds(String key, Long[] roleIds) {
+		if (Validator.isNull(key) && ArrayUtil.isEmpty(roleIds)) {
+			return Collections.emptySet();
+		}
+
+		LinkedHashMap<String, Object> params = new LinkedHashMap<>(1);
+
+		if (ArrayUtil.isNotEmpty(roleIds)) {
+			params.put("usersRoles", roleIds);
+		}
+
+		return Stream.of(
+			_userLocalService.search(
+				contextCompany.getCompanyId(), key,
+				WorkflowConstants.STATUS_APPROVED, params, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, (OrderByComparator<User>)null)
+		).flatMap(
+			List::parallelStream
+		).map(
+			User::getUserId
+		).collect(
+			Collectors.toSet()
+		);
 	}
 
 	private boolean _isOrderByOnTimeTaskCount(String fieldName) {
@@ -417,7 +489,7 @@ public class AssigneeUserResourceImpl
 
 	private AssigneeUser _toAssigneeUser(Bucket bucket) {
 		try {
-			User user = _userService.getUserById(
+			User user = _userLocalService.getUserById(
 				GetterUtil.getLong(bucket.getKey()));
 
 			return new AssigneeUser() {
@@ -503,6 +575,6 @@ public class AssigneeUserResourceImpl
 	private Sorts _sorts;
 
 	@Reference
-	private UserService _userService;
+	private UserLocalService _userLocalService;
 
 }
