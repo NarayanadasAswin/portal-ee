@@ -486,6 +486,47 @@ public class WorkflowMetricsSLAProcessorTest extends PowerMockito {
 				}));
 	}
 
+	@Test
+	public void testProcessSLAStopped() throws Exception {
+		LocalDateTime localDateTime = _createLocalDateTime();
+
+		WorkflowMetricsSLADefinitionVersion
+			workflowMetricsSLADefinitionVersion = mock(
+				WorkflowMetricsSLADefinitionVersion.class);
+
+		when(
+			workflowMetricsSLADefinitionVersion.getDuration()
+		).thenReturn(
+			10000L
+		);
+
+		when(
+			workflowMetricsSLADefinitionVersion.getStartNodeKeys()
+		).thenReturn(
+			"1:enter"
+		);
+
+		when(
+			workflowMetricsSLADefinitionVersion.getStopNodeKeys()
+		).thenReturn(
+			"2:leave"
+		);
+
+		_test(
+			localDateTime.minus(10, ChronoUnit.SECONDS), 10000,
+			new WorkflowMetricsSLAProcessResult() {
+				{
+					setElapsedTime(10000);
+					setLastCheckLocalDateTime(localDateTime);
+					setRemainingTime(0);
+					setWorkfowMetricsSLAStatus(WorkfowMetricsSLAStatus.STOPPED);
+					setOnTime(true);
+				}
+			},
+			localDateTime, true, 0, 1, workflowMetricsSLADefinitionVersion,
+			WorkfowMetricsSLAStatus.STOPPED);
+	}
+
 	protected WorkflowMetricsSLACalendarTracker
 			mockWorkflowMetricsSLACalendarTracker()
 		throws Exception {
@@ -558,6 +599,20 @@ public class WorkflowMetricsSLAProcessorTest extends PowerMockito {
 			Document... documents)
 		throws Exception {
 
+		_test(
+			createDateLocalDateTime, duration, elapsedTime, null, localDateTime,
+			onTime, remainingTime, workfowMetricsSLAStatus, documents);
+	}
+
+	private void _test(
+			LocalDateTime createDateLocalDateTime, long duration,
+			long elapsedTime,
+			WorkflowMetricsSLAProcessResult lastWorkflowMetricsSLAProcessResult,
+			LocalDateTime localDateTime, boolean onTime, long remainingTime,
+			WorkfowMetricsSLAStatus workfowMetricsSLAStatus,
+			Document... documents)
+		throws Exception {
+
 		WorkflowMetricsSLADefinitionVersion
 			workflowMetricsSLADefinitionVersion = mock(
 				WorkflowMetricsSLADefinitionVersion.class);
@@ -575,7 +630,8 @@ public class WorkflowMetricsSLAProcessorTest extends PowerMockito {
 		);
 
 		_test(
-			createDateLocalDateTime, elapsedTime, null, localDateTime, onTime,
+			createDateLocalDateTime, elapsedTime,
+			lastWorkflowMetricsSLAProcessResult, localDateTime, onTime,
 			remainingTime, 0, workflowMetricsSLADefinitionVersion,
 			workfowMetricsSLAStatus, documents);
 	}
