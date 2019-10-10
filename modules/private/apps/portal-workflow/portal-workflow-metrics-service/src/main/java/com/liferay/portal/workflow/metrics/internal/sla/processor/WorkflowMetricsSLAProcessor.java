@@ -448,6 +448,12 @@ public class WorkflowMetricsSLAProcessor {
 		WorkflowMetricsSLAStopwatch workflowMetricsSLAStopwatch =
 			new WorkflowMetricsSLAStopwatch(workfowMetricsSLAStatus);
 
+		if (Objects.equals(
+				workfowMetricsSLAStatus, WorkfowMetricsSLAStatus.STOPPED)) {
+
+			return workflowMetricsSLAStopwatch;
+		}
+
 		Map<Long, String> startTimeMarkers = _getTimeMarkers(
 			StringUtil.split(
 				workflowMetricsSLADefinitionVersion.getStartNodeKeys()));
