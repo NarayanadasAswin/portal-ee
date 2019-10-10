@@ -44,7 +44,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface AssigneeUserResource {
 
 	public Page<AssigneeUser> getProcessAssigneeUsersPage(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
+			Long processId, String keywords, Long[] roleIds, String[] taskKeys,
 			Pagination pagination, Sort[] sorts)
 		throws Exception;
 

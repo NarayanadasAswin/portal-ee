@@ -39,7 +39,6 @@ import com.liferay.portal.search.aggregation.bucket.Bucket;
 import com.liferay.portal.search.aggregation.bucket.FilterAggregation;
 import com.liferay.portal.search.aggregation.bucket.TermsAggregation;
 import com.liferay.portal.search.aggregation.bucket.TermsAggregationResult;
-import com.liferay.portal.search.aggregation.metrics.CardinalityAggregation;
 import com.liferay.portal.search.aggregation.metrics.CardinalityAggregationResult;
 import com.liferay.portal.search.aggregation.metrics.ValueCountAggregationResult;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
@@ -97,16 +96,18 @@ public class AssigneeUserResourceImpl
 
 	@Override
 	public Page<AssigneeUser> getProcessAssigneeUsersPage(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
+			Long processId, String keywords, Long[] roleIds, String[] taskKeys,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		Set<Long> userIds = _getUserIds(key, roleIds);
+		Set<Long> userIds = Collections.emptySet();
 
-		if ((Validator.isNotNull(key) || ArrayUtil.isNotEmpty(roleIds)) &&
-			userIds.isEmpty()) {
+		if (Validator.isNotNull(keywords) || ArrayUtil.isNotEmpty(roleIds)) {
+			userIds = _getUserIds(keywords, roleIds);
 
-			return Page.of(Collections.emptyList());
+			if (userIds.isEmpty()) {
+				return Page.of(Collections.emptyList());
+			}
 		}
 
 		FieldSort fieldSort = _toFieldSort(sorts);
@@ -146,7 +147,7 @@ public class AssigneeUserResourceImpl
 	}
 
 	private BooleanQuery _createSLATaskResultsBooleanQuery(
-		Set<Long> assigneeIdsSet, long processId, String[] taskKeys) {
+		Set<Long> assigneeIds, long processId, String[] taskKeys) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
@@ -161,7 +162,7 @@ public class AssigneeUserResourceImpl
 		}
 
 		booleanQuery.addMustQueryClauses(
-			_createAssigneeIdTermsQuery(assigneeIdsSet));
+			_createAssigneeIdTermsQuery(assigneeIds));
 
 		return booleanQuery.addMustQueryClauses(
 			_queries.term("companyId", contextCompany.getCompanyId()),
@@ -254,13 +255,9 @@ public class AssigneeUserResourceImpl
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		CardinalityAggregation cardinalityAggregation =
-			_aggregations.cardinality("assigneeId", "assigneeId");
-
-		searchSearchRequest.addAggregation(cardinalityAggregation);
-
+		searchSearchRequest.addAggregation(
+			_aggregations.cardinality("assigneeId", "assigneeId"));
 		searchSearchRequest.setIndexNames("workflow-metrics-tokens");
-
 		searchSearchRequest.setQuery(
 			_createTokensBooleanQuery(processId, taskKeys, userIds));
 
@@ -303,7 +300,6 @@ public class AssigneeUserResourceImpl
 		searchSearchRequest.addAggregation(termsAggregation);
 
 		searchSearchRequest.setIndexNames("workflow-metrics-tokens");
-
 		searchSearchRequest.setQuery(
 			_createTokensBooleanQuery(processId, taskKeys, userIds));
 
@@ -337,7 +333,7 @@ public class AssigneeUserResourceImpl
 	}
 
 	private TermsAggregationResult _getSLATermsAggregationResult(
-		Set<Long> assigneeIdsSet, FieldSort fieldSort, Pagination pagination,
+		Set<Long> assigneeIds, FieldSort fieldSort, Pagination pagination,
 		Long processId, String[] taskKeys) {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
@@ -371,14 +367,14 @@ public class AssigneeUserResourceImpl
 					fieldSort, pagination));
 		}
 
-		termsAggregation.setSize(assigneeIdsSet.size());
+		termsAggregation.setSize(assigneeIds.size());
 
 		searchSearchRequest.addAggregation(termsAggregation);
 
 		searchSearchRequest.setIndexNames("workflow-metrics-sla-task-results");
 		searchSearchRequest.setQuery(
 			_createSLATaskResultsBooleanQuery(
-				assigneeIdsSet, processId, taskKeys));
+				assigneeIds, processId, taskKeys));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
@@ -401,11 +397,7 @@ public class AssigneeUserResourceImpl
 		return GetterUtil.getLong(valueCountAggregationResult.getValue());
 	}
 
-	private Set<Long> _getUserIds(String key, Long[] roleIds) {
-		if (Validator.isNull(key) && ArrayUtil.isEmpty(roleIds)) {
-			return Collections.emptySet();
-		}
-
+	private Set<Long> _getUserIds(String keywords, Long[] roleIds) {
 		LinkedHashMap<String, Object> params = new LinkedHashMap<>(1);
 
 		if (ArrayUtil.isNotEmpty(roleIds)) {
@@ -414,7 +406,7 @@ public class AssigneeUserResourceImpl
 
 		return Stream.of(
 			_userLocalService.search(
-				contextCompany.getCompanyId(), key,
+				contextCompany.getCompanyId(), keywords,
 				WorkflowConstants.STATUS_APPROVED, params, QueryUtil.ALL_POS,
 				QueryUtil.ALL_POS, (OrderByComparator<User>)null)
 		).flatMap(

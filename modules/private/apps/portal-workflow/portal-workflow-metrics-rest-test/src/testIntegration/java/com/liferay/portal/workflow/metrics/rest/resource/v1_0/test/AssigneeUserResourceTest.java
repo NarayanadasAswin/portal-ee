@@ -223,9 +223,9 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 					{
 						id = assigneeUser2.getId();
 						name = assigneeUser2.getName();
-						taskCount = 1L;
 						onTimeTaskCount = 1L;
 						overdueTaskCount = 0L;
+						taskCount = 1L;
 					}
 				}),
 			(List<AssigneeUser>)page.getItems());
@@ -244,9 +244,9 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 					{
 						id = assigneeUser2.getId();
 						name = assigneeUser2.getName();
-						taskCount = 1L;
 						onTimeTaskCount = 1L;
 						overdueTaskCount = 0L;
+						taskCount = 1L;
 					}
 				}),
 			(List<AssigneeUser>)page.getItems());
@@ -293,12 +293,14 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 			});
 	}
 
+	@Override
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[] {
 			"id", "name", "onTimeTaskCount", "overdueTaskCount", "taskCount"
 		};
 	}
 
+	@Override
 	protected AssigneeUser randomAssigneeUser() throws Exception {
 		User user = UserTestUtil.addUser();
 

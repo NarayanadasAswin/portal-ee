@@ -39,12 +39,12 @@ public interface AssigneeUserResource {
 	}
 
 	public Page<AssigneeUser> getProcessAssigneeUsersPage(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
+			Long processId, String keywords, Long[] roleIds, String[] taskKeys,
 			Pagination pagination, String sortString)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getProcessAssigneeUsersPageHttpResponse(
-			Long processId, String key, Long[] roleIds, String[] taskKeys,
+			Long processId, String keywords, Long[] roleIds, String[] taskKeys,
 			Pagination pagination, String sortString)
 		throws Exception;
 
@@ -105,13 +105,14 @@ public interface AssigneeUserResource {
 		implements AssigneeUserResource {
 
 		public Page<AssigneeUser> getProcessAssigneeUsersPage(
-				Long processId, String key, Long[] roleIds, String[] taskKeys,
-				Pagination pagination, String sortString)
+				Long processId, String keywords, Long[] roleIds,
+				String[] taskKeys, Pagination pagination, String sortString)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
 				getProcessAssigneeUsersPageHttpResponse(
-					processId, key, roleIds, taskKeys, pagination, sortString);
+					processId, keywords, roleIds, taskKeys, pagination,
+					sortString);
 
 			String content = httpResponse.getContent();
 
@@ -125,8 +126,8 @@ public interface AssigneeUserResource {
 		}
 
 		public HttpInvoker.HttpResponse getProcessAssigneeUsersPageHttpResponse(
-				Long processId, String key, Long[] roleIds, String[] taskKeys,
-				Pagination pagination, String sortString)
+				Long processId, String keywords, Long[] roleIds,
+				String[] taskKeys, Pagination pagination, String sortString)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -150,8 +151,8 @@ public interface AssigneeUserResource {
 
 			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
 
-			if (key != null) {
-				httpInvoker.parameter("key", String.valueOf(key));
+			if (keywords != null) {
+				httpInvoker.parameter("keywords", String.valueOf(keywords));
 			}
 
 			if (roleIds != null) {

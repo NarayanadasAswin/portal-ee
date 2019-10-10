@@ -68,7 +68,7 @@ public abstract class BaseAssigneeUserResourceImpl
 	@Parameters(
 		value = {
 			@Parameter(in = ParameterIn.PATH, name = "processId"),
-			@Parameter(in = ParameterIn.QUERY, name = "key"),
+			@Parameter(in = ParameterIn.QUERY, name = "keywords"),
 			@Parameter(in = ParameterIn.QUERY, name = "roleIds"),
 			@Parameter(in = ParameterIn.QUERY, name = "taskKeys"),
 			@Parameter(in = ParameterIn.QUERY, name = "page"),
@@ -82,7 +82,7 @@ public abstract class BaseAssigneeUserResourceImpl
 	public Page<AssigneeUser> getProcessAssigneeUsersPage(
 			@NotNull @Parameter(hidden = true) @PathParam("processId") Long
 				processId,
-			@Parameter(hidden = true) @QueryParam("key") String key,
+			@Parameter(hidden = true) @QueryParam("keywords") String keywords,
 			@Parameter(hidden = true) @QueryParam("roleIds") Long[] roleIds,
 			@Parameter(hidden = true) @QueryParam("taskKeys") String[] taskKeys,
 			@Context Pagination pagination, @Context Sort[] sorts)

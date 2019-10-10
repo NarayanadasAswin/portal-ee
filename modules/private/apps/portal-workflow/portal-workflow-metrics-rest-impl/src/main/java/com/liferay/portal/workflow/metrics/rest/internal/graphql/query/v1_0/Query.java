@@ -149,12 +149,12 @@ public class Query {
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {processAssigneeUsers(key: ___, page: ___, pageSize: ___, processId: ___, roleIds: ___, sorts: ___, taskKeys: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
+	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {processAssigneeUsers(keywords: ___, page: ___, pageSize: ___, processId: ___, roleIds: ___, sorts: ___, taskKeys: ___){items {__}, page, pageSize, totalCount}}"}' -u 'test@liferay.com:test'
 	 */
 	@GraphQLField
 	public AssigneeUserPage processAssigneeUsers(
 			@GraphQLName("processId") Long processId,
-			@GraphQLName("key") String key,
+			@GraphQLName("keywords") String keywords,
 			@GraphQLName("roleIds") Long[] roleIds,
 			@GraphQLName("taskKeys") String[] taskKeys,
 			@GraphQLName("pageSize") int pageSize,
@@ -167,7 +167,7 @@ public class Query {
 			this::_populateResourceContext,
 			assigneeUserResource -> new AssigneeUserPage(
 				assigneeUserResource.getProcessAssigneeUsersPage(
-					processId, key, roleIds, taskKeys,
+					processId, keywords, roleIds, taskKeys,
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(
 						assigneeUserResource, sortsString))));
