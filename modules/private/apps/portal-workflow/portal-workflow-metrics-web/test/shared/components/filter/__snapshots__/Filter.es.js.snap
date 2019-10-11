@@ -87,46 +87,43 @@ exports[`Should render component with search wrapper 1`] = `
     className="dropdown-menu"
     role="menu"
   >
-    <form>
+    <div
+      className="dropdown-section"
+    >
       <div
-        className="dropdown-section"
+        className="input-group input-group-sm"
       >
         <div
-          className="input-group input-group-sm"
+          className="input-group-item"
         >
-          <div
-            className="input-group-item"
+          <input
+            className="form-control input-group-inset input-group-inset-after"
+            onChange={[Function]}
+            placeholder="search-for"
+            type="text"
+          />
+          <span
+            className="input-group-inset-item input-group-inset-item-after"
           >
-            <input
-              className="form-control input-group-inset input-group-inset-after"
-              onChange={[Function]}
-              placeholder="search-for"
-              type="text"
-            />
             <span
-              className="input-group-inset-item input-group-inset-item-after"
+              className="ml-2 mr-2"
             >
-              <button
-                className="btn btn-unstyled"
-                type="button"
-              >
-                <svg
-                  className="lexicon-icon lexicon-icon-search"
-                  dangerouslySetInnerHTML={
-                    Object {
-                      "__html": "<use xlink:href=\\"http://localhost:8080/o/admin-theme/images/lexicon/icons.svg#search\\" />",
-                    }
+              <svg
+                className="lexicon-icon lexicon-icon-search"
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "<use xlink:href=\\"http://localhost:8080/o/admin-theme/images/lexicon/icons.svg#search\\" />",
                   }
-                  data-testid="icon"
-                  focusable="false"
-                  role="presentation"
-                />
-              </button>
+                }
+                data-testid="icon"
+                focusable="false"
+                role="presentation"
+              />
             </span>
-          </div>
+          </span>
         </div>
       </div>
-    </form>
+    </div>
     <ul
       className="list-unstyled"
     >
