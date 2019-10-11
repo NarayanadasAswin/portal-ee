@@ -40,7 +40,16 @@ class WorkloadByStepCard extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		return this.loadData(nextProps);
+		const {page, pageSize, processId, sort} = this.props;
+
+		if (
+			nextProps.page !== page ||
+			nextProps.pageSize !== pageSize ||
+			nextProps.processId !== processId ||
+			nextProps.sort !== sort
+		) {
+			return this.loadData(nextProps);
+		}
 	}
 
 	loadData(props = this.props) {
