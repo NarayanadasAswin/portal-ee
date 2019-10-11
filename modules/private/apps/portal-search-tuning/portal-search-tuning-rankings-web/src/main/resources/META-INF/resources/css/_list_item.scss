@@ -8,10 +8,6 @@
 		line-height: 21px;
 	}
 
-	&:focus {
-		outline: none;
-	}
-
 	.icon-grey {
 		background-color: $mainLighten28;
 	}
@@ -70,6 +66,10 @@
 			color: $main;
 			pointer-events: none;
 		}
+	}
+
+	&:focus {
+		outline: none;
 	}
 
 	&:hover {
