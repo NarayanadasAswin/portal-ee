@@ -55,9 +55,8 @@ const Body = ({currentTab, processId, query}) => {
 
 					<div className="mb-1 text-right">
 						<button className="border-0 btn btn-secondary btn-sm">
-							<span data-testid="viewAllSteps">
-								{Liferay.Language.get('view-all-assignees') +
-									` (${data.totalCount})`}
+							<span className="mr-2" data-testid="viewAllSteps">
+								{Liferay.Language.get('view-all-assignees')}
 							</span>
 
 							<Icon iconName="caret-right-l" />
