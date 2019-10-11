@@ -15,6 +15,7 @@
 package com.liferay.portal.workflow.metrics.rest.internal.odata.entity.v1_0;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.odata.entity.IntegerEntityField;
@@ -48,9 +49,9 @@ public class AssigneeUserEntityModel implements EntityModel {
 
 	@Override
 	public String getName() {
-		String name = AssigneeUserEntityModel.class.getName();
-
-		return name.replace(CharPool.PERIOD, CharPool.UNDERLINE);
+		return StringUtil.replace(
+			AssigneeUserEntityModel.class.getName(), CharPool.PERIOD,
+			CharPool.UNDERLINE);
 	}
 
 	private final Map<String, EntityField> _entityFieldsMap;
