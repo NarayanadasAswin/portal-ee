@@ -22,31 +22,26 @@ export default class FilterSearch extends React.Component {
 		return (
 			<>
 				{searchEnabled && (
-					<form>
-						<div className="dropdown-section">
-							<div className="input-group input-group-sm">
-								<div className="input-group-item">
-									<input
-										className="form-control input-group-inset input-group-inset-after"
-										onChange={onChange}
-										placeholder={Liferay.Language.get(
-											'search-for'
-										)}
-										type="text"
-									/>
+					<div className="dropdown-section">
+						<div className="input-group input-group-sm">
+							<div className="input-group-item">
+								<input
+									className="form-control input-group-inset input-group-inset-after"
+									onChange={onChange}
+									placeholder={Liferay.Language.get(
+										'search-for'
+									)}
+									type="text"
+								/>
 
-									<span className="input-group-inset-item input-group-inset-item-after">
-										<button
-											className="btn btn-unstyled"
-											type="button"
-										>
-											<Icon iconName="search" />
-										</button>
+								<span className="input-group-inset-item input-group-inset-item-after">
+									<span className="ml-2 mr-2">
+										<Icon iconName="search" />
 									</span>
-								</div>
+								</span>
 							</div>
 						</div>
-					</form>
+					</div>
 				)}
 
 				{emptyResults && (
