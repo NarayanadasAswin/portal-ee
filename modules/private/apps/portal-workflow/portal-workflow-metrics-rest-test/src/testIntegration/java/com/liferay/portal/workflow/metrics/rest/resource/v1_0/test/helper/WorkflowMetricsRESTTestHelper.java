@@ -458,32 +458,25 @@ public class WorkflowMetricsRESTTestHelper {
 			return new Document[0];
 		}
 
-		return IdempotentRetryAssert.retryAssert(
-			10, TimeUnit.SECONDS,
-			() -> {
-				SearchSearchRequest searchSearchRequest =
-					new SearchSearchRequest();
+		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-				searchSearchRequest.setIndexNames("workflow-metrics-processes");
+		searchSearchRequest.setIndexNames("workflow-metrics-processes");
 
-				BooleanQuery booleanQuery = _queries.booleanQuery();
+		BooleanQuery booleanQuery = _queries.booleanQuery();
 
-				searchSearchRequest.setQuery(
-					booleanQuery.addMustQueryClauses(
-						_queries.term("companyId", companyId),
-						_queries.term("deleted", Boolean.FALSE)));
+		searchSearchRequest.setQuery(
+			booleanQuery.addMustQueryClauses(
+				_queries.term("companyId", companyId),
+				_queries.term("deleted", Boolean.FALSE)));
 
-				searchSearchRequest.setSize(10000);
+		searchSearchRequest.setSize(10000);
 
-				SearchSearchResponse searchSearchResponse =
-					_searchEngineAdapter.execute(searchSearchRequest);
+		SearchSearchResponse searchSearchResponse =
+			_searchEngineAdapter.execute(searchSearchRequest);
 
-				Hits hits = searchSearchResponse.getHits();
+		Hits hits = searchSearchResponse.getHits();
 
-				Assert.assertNotEquals(hits.toString(), 0, hits.getLength());
-
-				return hits.getDocs();
-			});
+		return hits.getDocs();
 	}
 
 	public void restoreProcess(Document document) throws Exception {
