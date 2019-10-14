@@ -14,7 +14,7 @@ import ClayButton from '@clayui/button';
 import ClayEmptyState, {DISPLAY_STATES} from '../shared/ClayEmptyState.es';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal, {useModal} from '@clayui/modal';
-import {ClayPaginationWithBar} from '@clayui/pagination';
+import {ClayPaginationBarWithBasicItems} from '@clayui/pagination-bar';
 import getCN from 'classnames';
 import Item from '../list/Item.es';
 import PropTypes from 'prop-types';
@@ -392,7 +392,7 @@ function AddResultModal({
 
 				{false && (
 					<div className="add-result-container">
-						<ClayPaginationWithBar
+						<ClayPaginationBarWithBasicItems
 							activeDelta={delta}
 							activePage={page}
 							deltas={DELTAS}
