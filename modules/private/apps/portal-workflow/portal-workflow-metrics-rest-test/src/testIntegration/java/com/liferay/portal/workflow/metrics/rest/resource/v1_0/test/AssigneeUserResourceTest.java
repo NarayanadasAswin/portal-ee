@@ -142,7 +142,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		Role siteAdministrationRole = _roleLocalService.getRole(
 			TestPropsValues.getCompanyId(), RoleConstants.SITE_ADMINISTRATOR);
 
-		AssigneeUser assigneeUser2 = randomAssigneeUser(siteAdministrationRole);
+		AssigneeUser assigneeUser2 = _randomAssigneeUser(
+			siteAdministrationRole);
 
 		assigneeUser2.setOnTimeTaskCount(1L);
 		assigneeUser2.setOverdueTaskCount(0L);
@@ -321,7 +322,7 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		};
 	}
 
-	protected AssigneeUser randomAssigneeUser(Role role) throws Exception {
+	private AssigneeUser _randomAssigneeUser(Role role) throws Exception {
 		AssigneeUser assigneeUser = randomAssigneeUser();
 
 		_addRoleUser(role, assigneeUser.getId());

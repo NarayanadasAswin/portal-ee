@@ -79,12 +79,12 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 
 		User user = UserTestUtil.addUser();
 
-		com.liferay.portal.kernel.model.Role userRole =
+		com.liferay.portal.kernel.model.Role serviceBuilderRole =
 			_roleLocalService.getRole(
 				testCompany.getCompanyId(), RoleConstants.USER);
 
 		_userLocalService.deleteRoleUser(
-			userRole.getRoleId(), user.getUserId());
+			serviceBuilderRole.getRoleId(), user.getUserId());
 
 		_userLocalService.addRoleUser(role.getId(), user);
 
