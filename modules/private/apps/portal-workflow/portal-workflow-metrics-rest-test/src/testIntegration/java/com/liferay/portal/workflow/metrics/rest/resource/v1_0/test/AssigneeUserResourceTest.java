@@ -322,14 +322,6 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		};
 	}
 
-	private AssigneeUser _randomAssigneeUser(Role role) throws Exception {
-		AssigneeUser assigneeUser = randomAssigneeUser();
-
-		_addRoleUser(role, assigneeUser.getId());
-
-		return assigneeUser;
-	}
-
 	@Override
 	protected AssigneeUser testGetProcessAssigneeUsersPage_addAssigneeUser(
 			Long processId, AssigneeUser assigneeUser)
@@ -403,6 +395,14 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 	private void _deleteTokens() throws Exception {
 		_workflowMetricsRESTTestHelper.deleteTokens(
 			testGroup.getCompanyId(), _process.getId());
+	}
+
+	private AssigneeUser _randomAssigneeUser(Role role) throws Exception {
+		AssigneeUser assigneeUser = randomAssigneeUser();
+
+		_addRoleUser(role, assigneeUser.getId());
+
+		return assigneeUser;
 	}
 
 	@Inject
