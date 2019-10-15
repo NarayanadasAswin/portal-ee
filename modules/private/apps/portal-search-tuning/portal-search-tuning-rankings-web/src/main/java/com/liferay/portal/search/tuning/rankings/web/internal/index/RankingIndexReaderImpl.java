@@ -119,6 +119,7 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
 			RankingIndexDefinition.INDEX_NAME, id);
 
+		getDocumentRequest.setFetchSource(true);
 		getDocumentRequest.setFetchSourceInclude(StringPool.STAR);
 
 		GetDocumentResponse getDocumentResponse = _searchEngineAdapter.execute(

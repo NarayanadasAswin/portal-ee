@@ -74,8 +74,9 @@ public class RankingGetHiddenResultsBuilder {
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
 			index, id);
 
-		getDocumentRequest.setType(type);
+		getDocumentRequest.setFetchSource(true);
 		getDocumentRequest.setFetchSourceInclude("*");
+		getDocumentRequest.setType(type);
 
 		GetDocumentResponse getDocumentResponse = _searchEngineAdapter.execute(
 			getDocumentRequest);
