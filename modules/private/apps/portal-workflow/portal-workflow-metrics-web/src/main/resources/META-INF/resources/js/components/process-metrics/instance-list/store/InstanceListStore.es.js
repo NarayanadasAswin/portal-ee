@@ -9,10 +9,8 @@
  * distribution rights of the Software.
  */
 
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useState} from 'react';
 import {AppContext} from '../../../AppContext.es';
-import {ErrorContext} from '../../../../shared/components/request/Error.es';
-import {LoadingContext} from '../../../../shared/components/request/Loading.es';
 import {ProcessStatusContext} from '../../filter/store/ProcessStatusStore.es';
 import {ProcessStepContext} from '../../filter/store/ProcessStepStore.es';
 import {SLAStatusContext} from '../../filter/store/SLAStatusStore.es';
@@ -36,10 +34,11 @@ const reduceFilters = (filterItems, paramKey) =>
 const useInstanceListData = (page, pageSize, processId, query) => {
 	const [instanceId, setInstanceId] = useState();
 	const [items, setItems] = useState([]);
+	const [loading] = useState([]);
 	const [searching, setSearching] = useState();
 	const [totalCount, setTotalCount] = useState();
 
-	const {client, setTitle} = useContext(AppContext);
+	const {client} = useContext(AppContext);
 	const {getSelectedAssignees} = useContext(AssigneeContext);
 	const {getSelectedProcessStatuses, isCompletedStatusSelected} = useContext(
 		ProcessStatusContext
@@ -47,8 +46,6 @@ const useInstanceListData = (page, pageSize, processId, query) => {
 	const {getSelectedProcessSteps} = useContext(ProcessStepContext);
 	const {getSelectedSLAStatuses} = useContext(SLAStatusContext);
 	const {getSelectedTimeRange} = useContext(TimeRangeContext);
-	const {setError} = useContext(ErrorContext);
-	const {setLoading} = useContext(LoadingContext);
 
 	const filters = getFiltersParam(query);
 
@@ -129,47 +126,18 @@ const useInstanceListData = (page, pageSize, processId, query) => {
 	};
 
 	const fetchInstances = () => {
-		setError(null);
-		setLoading(true);
-
-		client
-			.get(getInstancesRequestURL())
-			.then(({data}) => {
-				setItems(data.items);
-				setTotalCount(data.totalCount);
-			})
-			.catch(error => {
-				setError(error);
-			})
-			.then(() => {
-				setLoading(false);
-			});
+		return client.get(getInstancesRequestURL()).then(({data}) => {
+			setItems(data.items);
+			setTotalCount(data.totalCount);
+			return data;
+		});
 	};
-
-	const fetchProcess = () => {
-		setError(null);
-		setLoading(true);
-
-		client
-			.get(`/processes/${processId}/title`)
-			.then(({data}) => {
-				setTitle(`${data}: ${Liferay.Language.get('all-items')}`);
-			})
-			.catch(error => {
-				setError(error);
-			})
-			.then(() => {
-				setLoading(false);
-			});
-	};
-
-	useEffect(fetchProcess, [processId]);
-
-	useEffect(fetchInstances, [page, pageSize, processId, query]);
 
 	return {
+		fetchInstances,
 		instanceId,
 		items,
+		loading,
 		searching,
 		setInstanceId,
 		totalCount
