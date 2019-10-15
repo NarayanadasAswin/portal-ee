@@ -29,7 +29,7 @@ const useAssignee = (assigneeKeys, processId) => {
 		setLoading(true);
 
 		client
-			.get(`/processes/${processId}/assignee-users`)
+			.get(`/processes/${processId}/assignee-users?page=0&pageSize=0`)
 			.then(({data}) => {
 				const items = data.items || [];
 
