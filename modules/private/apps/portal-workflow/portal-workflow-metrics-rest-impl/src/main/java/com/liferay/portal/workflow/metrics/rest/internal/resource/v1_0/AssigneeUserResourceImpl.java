@@ -149,47 +149,47 @@ public class AssigneeUserResourceImpl
 	private BooleanQuery _createBooleanQuery(
 		Set<Long> assigneeIds, long processId, String[] taskKeys) {
 
+		BooleanQuery booleanQuery = _queries.booleanQuery();
+
 		BooleanQuery slaTaskResultsBooleanQuery = _queries.booleanQuery();
 
 		slaTaskResultsBooleanQuery.addFilterQueryClauses(
 			_queries.term("_index", "workflow-metrics-sla-task-results"));
-		slaTaskResultsBooleanQuery.addMustNotQueryClauses(
-			_queries.term("status", WorkfowMetricsSLAStatus.COMPLETED),
-			_queries.term("status", WorkfowMetricsSLAStatus.EXPIRED));
+		slaTaskResultsBooleanQuery.addMustQueryClauses(
+			_createSLATaskResultsBooleanQuery(
+				assigneeIds, processId, taskKeys));
 
 		BooleanQuery tokensBooleanQuery = _queries.booleanQuery();
 
 		tokensBooleanQuery.addFilterQueryClauses(
 			_queries.term("_index", "workflow-metrics-tokens"));
-
-		TermsQuery assigneeIdTermsQuery = _createAssigneeIdTermsQuery(
-			assigneeIds);
-
-		TermsQuery taskNameTermsQuery = _createTaskNameTermsQuery(taskKeys);
-
-		Stream.of(
-			slaTaskResultsBooleanQuery, tokensBooleanQuery
-		).forEach(
-			booleanQuery -> {
-				booleanQuery.addMustNotQueryClauses(
-					_queries.term("instanceId", 0));
-
-				if (taskKeys.length > 0) {
-					booleanQuery.addMustQueryClauses(taskNameTermsQuery);
-				}
-
-				booleanQuery.addMustQueryClauses(
-					assigneeIdTermsQuery,
-					_queries.term("companyId", contextCompany.getCompanyId()),
-					_queries.term("deleted", Boolean.FALSE),
-					_queries.term("processId", processId));
-			}
-		);
-
-		BooleanQuery booleanQuery = _queries.booleanQuery();
+		tokensBooleanQuery.addMustQueryClauses(
+			_createTokensBooleanQuery(assigneeIds, processId, taskKeys));
 
 		return booleanQuery.addShouldQueryClauses(
 			slaTaskResultsBooleanQuery, tokensBooleanQuery);
+	}
+
+	private BooleanQuery _createSLATaskResultsBooleanQuery(
+		Set<Long> assigneeIds, long processId, String[] taskKeys) {
+
+		BooleanQuery booleanQuery = _queries.booleanQuery();
+
+		booleanQuery.addMustNotQueryClauses(
+			_queries.term("instanceId", 0),
+			_queries.term("status", WorkfowMetricsSLAStatus.COMPLETED),
+			_queries.term("status", WorkfowMetricsSLAStatus.EXPIRED));
+
+		if (taskKeys.length > 0) {
+			booleanQuery.addMustQueryClauses(
+				_createTaskNameTermsQuery(taskKeys));
+		}
+
+		return booleanQuery.addMustQueryClauses(
+			_queries.term("companyId", contextCompany.getCompanyId()),
+			_queries.term("deleted", Boolean.FALSE),
+			_queries.term("processId", processId),
+			_createAssigneeIdTermsQuery(assigneeIds));
 	}
 
 	private TermsQuery _createTaskNameTermsQuery(String[] taskNames) {
@@ -222,6 +222,25 @@ public class AssigneeUserResourceImpl
 			_queries.term("completed", Boolean.FALSE),
 			_queries.term("deleted", Boolean.FALSE),
 			_queries.term("processId", processId));
+	}
+
+	private BooleanQuery _createTokensBooleanQuery(
+		Set<Long> assigneeIds, long processId, String[] taskKeys) {
+
+		BooleanQuery booleanQuery = _queries.booleanQuery();
+
+		booleanQuery.addMustNotQueryClauses(_queries.term("instanceId", 0));
+
+		if (taskKeys.length > 0) {
+			booleanQuery.addMustQueryClauses(
+				_createTaskNameTermsQuery(taskKeys));
+		}
+
+		return booleanQuery.addMustQueryClauses(
+			_queries.term("companyId", contextCompany.getCompanyId()),
+			_queries.term("deleted", Boolean.FALSE),
+			_queries.term("processId", processId),
+			_createAssigneeIdTermsQuery(assigneeIds));
 	}
 
 	private Collection<AssigneeUser> _getAssigneeUsers(
