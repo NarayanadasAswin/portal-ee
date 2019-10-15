@@ -678,6 +678,7 @@ public class WorkflowMetricsRESTTestHelper {
 
 		searchSearchRequest.setQuery(booleanQuery);
 
+		searchSearchRequest.setSize(10000);
 		searchSearchRequest.setTypes(indexType);
 
 		SearchSearchResponse searchSearchResponse =

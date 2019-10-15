@@ -104,8 +104,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 		AssigneeUser assigneeUser1 = randomAssigneeUser();
 
 		assigneeUser1.setOnTimeTaskCount(0L);
-		assigneeUser1.setOverdueTaskCount(2L);
-		assigneeUser1.setTaskCount(2L);
+		assigneeUser1.setOverdueTaskCount(3L);
+		assigneeUser1.setTaskCount(3L);
 
 		Instance instance1 = _workflowMetricsRESTTestHelper.addInstance(
 			testGroup.getCompanyId(), false, _process.getId());
@@ -118,6 +118,19 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 					instanceCount = 1L;
 					key = "review";
 					name = "review";
+					onTimeInstanceCount = 0L;
+					overdueInstanceCount = 1L;
+				}
+			});
+
+		testGetProcessAssigneeUsersPage_addAssigneeUser(
+			_process.getId(), assigneeUser1, () -> instance1,
+			new Task() {
+				{
+					durationAvg = 0L;
+					instanceCount = 1L;
+					key = "update";
+					name = "update";
 					onTimeInstanceCount = 0L;
 					overdueInstanceCount = 1L;
 				}
@@ -146,8 +159,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 			siteAdministrationRole);
 
 		assigneeUser2.setOnTimeTaskCount(1L);
-		assigneeUser2.setOverdueTaskCount(0L);
-		assigneeUser2.setTaskCount(1L);
+		assigneeUser2.setOverdueTaskCount(1L);
+		assigneeUser2.setTaskCount(2L);
 
 		testGetProcessAssigneeUsersPage_addAssigneeUser(
 			_process.getId(), assigneeUser2, () -> instance1,
@@ -159,6 +172,19 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 					name = "review";
 					onTimeInstanceCount = 1L;
 					overdueInstanceCount = 0L;
+				}
+			});
+
+		testGetProcessAssigneeUsersPage_addAssigneeUser(
+			_process.getId(), assigneeUser2, () -> instance2,
+			new Task() {
+				{
+					durationAvg = 0L;
+					instanceCount = 1L;
+					key = "submit";
+					name = "submit";
+					onTimeInstanceCount = 0L;
+					overdueInstanceCount = 1L;
 				}
 			});
 
@@ -176,8 +202,8 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 						id = assigneeUser1.getId();
 						name = assigneeUser1.getName();
 						onTimeTaskCount = 0L;
-						overdueTaskCount = 1L;
-						taskCount = 1L;
+						overdueTaskCount = 2L;
+						taskCount = 2L;
 					}
 				}),
 			(List<AssigneeUser>)page.getItems());
@@ -259,6 +285,35 @@ public class AssigneeUserResourceTest extends BaseAssigneeUserResourceTestCase {
 			"overdueTaskCount:desc");
 
 		Assert.assertEquals(0, page.getTotalCount());
+
+		AssigneeUser assigneeUser3 = randomAssigneeUser();
+
+		assigneeUser3.setOnTimeTaskCount(0L);
+		assigneeUser3.setOverdueTaskCount(0L);
+		assigneeUser3.setTaskCount(1L);
+
+		testGetProcessAssigneeUsersPage_addAssigneeUser(
+			_process.getId(), assigneeUser3, () -> instance1,
+			new Task() {
+				{
+					durationAvg = 0L;
+					instanceCount = 1L;
+					key = "review";
+					name = "review";
+					onTimeInstanceCount = 0L;
+					overdueInstanceCount = 0L;
+				}
+			});
+
+		page = assigneeUserResource.getProcessAssigneeUsersPage(
+			_process.getId(), null, null, null, Pagination.of(1, 10),
+			"overdueTaskCount:desc");
+
+		Assert.assertEquals(3, page.getTotalCount());
+
+		assertEquals(
+			Arrays.asList(assigneeUser1, assigneeUser2, assigneeUser3),
+			(List<AssigneeUser>)page.getItems());
 	}
 
 	@Override
