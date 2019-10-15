@@ -146,28 +146,50 @@ public class AssigneeUserResourceImpl
 		return termsQuery;
 	}
 
-	private BooleanQuery _createSLATaskResultsBooleanQuery(
+	private BooleanQuery _createBooleanQuery(
 		Set<Long> assigneeIds, long processId, String[] taskKeys) {
 
-		BooleanQuery booleanQuery = _queries.booleanQuery();
+		BooleanQuery slaTaskResultsBooleanQuery = _queries.booleanQuery();
 
-		booleanQuery.addMustNotQueryClauses(
-			_queries.term("instanceId", 0),
+		slaTaskResultsBooleanQuery.addFilterQueryClauses(
+			_queries.term("_index", "workflow-metrics-sla-task-results"));
+		slaTaskResultsBooleanQuery.addMustNotQueryClauses(
 			_queries.term("status", WorkfowMetricsSLAStatus.COMPLETED),
 			_queries.term("status", WorkfowMetricsSLAStatus.EXPIRED));
 
-		if (taskKeys.length > 0) {
-			booleanQuery.addMustQueryClauses(
-				_createTaskNameTermsQuery(taskKeys));
-		}
+		BooleanQuery tokensBooleanQuery = _queries.booleanQuery();
 
-		booleanQuery.addMustQueryClauses(
-			_createAssigneeIdTermsQuery(assigneeIds));
+		tokensBooleanQuery.addFilterQueryClauses(
+			_queries.term("_index", "workflow-metrics-tokens"));
 
-		return booleanQuery.addMustQueryClauses(
-			_queries.term("companyId", contextCompany.getCompanyId()),
-			_queries.term("deleted", Boolean.FALSE),
-			_queries.term("processId", processId));
+		TermsQuery assigneeIdTermsQuery = _createAssigneeIdTermsQuery(
+			assigneeIds);
+
+		TermsQuery taskNameTermsQuery = _createTaskNameTermsQuery(taskKeys);
+
+		Stream.of(
+			slaTaskResultsBooleanQuery, tokensBooleanQuery
+		).forEach(
+			booleanQuery -> {
+				booleanQuery.addMustNotQueryClauses(
+					_queries.term("instanceId", 0));
+
+				if (taskKeys.length > 0) {
+					booleanQuery.addMustQueryClauses(taskNameTermsQuery);
+				}
+
+				booleanQuery.addMustQueryClauses(
+					assigneeIdTermsQuery,
+					_queries.term("companyId", contextCompany.getCompanyId()),
+					_queries.term("deleted", Boolean.FALSE),
+					_queries.term("processId", processId));
+			}
+		);
+
+		BooleanQuery booleanQuery = _queries.booleanQuery();
+
+		return booleanQuery.addShouldQueryClauses(
+			slaTaskResultsBooleanQuery, tokensBooleanQuery);
 	}
 
 	private TermsQuery _createTaskNameTermsQuery(String[] taskNames) {
@@ -371,10 +393,10 @@ public class AssigneeUserResourceImpl
 
 		searchSearchRequest.addAggregation(termsAggregation);
 
-		searchSearchRequest.setIndexNames("workflow-metrics-sla-task-results");
+		searchSearchRequest.setIndexNames(
+			"workflow-metrics-sla-task-results", "workflow-metrics-tokens");
 		searchSearchRequest.setQuery(
-			_createSLATaskResultsBooleanQuery(
-				assigneeIds, processId, taskKeys));
+			_createBooleanQuery(assigneeIds, processId, taskKeys));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
@@ -488,6 +510,8 @@ public class AssigneeUserResourceImpl
 				{
 					id = user.getUserId();
 					name = user.getFullName();
+					onTimeTaskCount = 0L;
+					overdueTaskCount = 0L;
 
 					setImage(
 						() -> {
