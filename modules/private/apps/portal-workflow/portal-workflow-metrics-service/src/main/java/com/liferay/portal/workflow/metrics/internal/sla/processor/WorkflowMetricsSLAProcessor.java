@@ -540,6 +540,14 @@ public class WorkflowMetricsSLAProcessor {
 						workflowMetricsSLAProcessResult.
 							getOverdueLocalDateTime()));
 				setCompanyId(workflowMetricsSLAProcessResult.getCompanyId());
+
+				if (Validator.isNotNull(document.getString("completionDate"))) {
+					setCompletionLocalDateTime(
+						LocalDateTime.parse(
+							document.getString("completionDate"),
+							_dateTimeFormatter));
+				}
+
 				setInstanceId(workflowMetricsSLAProcessResult.getInstanceId());
 				setLastCheckLocalDateTime(
 					workflowMetricsSLAProcessResult.

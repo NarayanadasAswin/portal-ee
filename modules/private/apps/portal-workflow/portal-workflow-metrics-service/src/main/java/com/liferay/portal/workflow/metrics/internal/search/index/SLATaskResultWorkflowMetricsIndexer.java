@@ -91,6 +91,14 @@ public class SLATaskResultWorkflowMetricsIndexer
 			"companyId", workflowMetricsSLATaskResult.getCompanyId());
 		document.addKeyword(
 			"breached", workflowMetricsSLATaskResult.isBreached());
+
+		if (workflowMetricsSLATaskResult.getCompletionLocalDateTime() != null) {
+			document.addDateSortable(
+				"completionDate",
+				Timestamp.valueOf(
+					workflowMetricsSLATaskResult.getCompletionLocalDateTime()));
+		}
+
 		document.addKeyword("deleted", false);
 		document.addKeyword(
 			"instanceId", workflowMetricsSLATaskResult.getInstanceId());
