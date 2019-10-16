@@ -36,6 +36,7 @@ function InstanceItemDetail({processId}) {
 	const {
 		assetTitle,
 		assetType,
+		assigneeUsers,
 		creatorUser,
 		dateCompletion,
 		dateCreated,
@@ -198,6 +199,21 @@ function InstanceItemDetail({processId}) {
 									.format(
 										Liferay.Language.get('mmm-dd-yyyy-lt')
 									)}
+							/>
+						)}
+
+						{!completed && (
+							<InstanceItemDetail.SectionAttribute
+								description={Liferay.Language.get(
+									'current-assignee'
+								)}
+								detail={
+									assigneeUsers
+										? assigneeUsers
+												.map(user => user.name)
+												.join(', ')
+										: Liferay.Language.get('unassigned')
+								}
 							/>
 						)}
 
