@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -615,6 +616,9 @@ public class WorkflowMetricsRESTTestHelper {
 		document.addKeyword("assigneeId", assigneeId);
 		document.addKeyword("breached", breached);
 		document.addKeyword("companyId", companyId);
+		document.addDateSortable(
+			"completionDate",
+			Objects.equals(status, "COMPLETED") ? new Date() : null);
 		document.addKeyword("deleted", false);
 		document.addKeyword("elapsedTime", onTime ? 1000 : -1000);
 		document.addKeyword("instanceId", instanceId);

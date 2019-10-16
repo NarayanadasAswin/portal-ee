@@ -36,6 +36,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,7 +96,8 @@ public class TaskResourceTest extends BaseTaskResourceTestCase {
 		task1.setOnTimeInstanceCount(0L);
 		task1.setOverdueInstanceCount(0L);
 
-		testGetProcessTasksPage_addTask(_process.getId(), task1, "2.0");
+		testGetProcessTasksPage_addTask(
+			_process.getId(), "COMPLETED", task1, "2.0");
 
 		Task task2 = randomTask();
 
@@ -105,7 +107,8 @@ public class TaskResourceTest extends BaseTaskResourceTestCase {
 		task2.setOnTimeInstanceCount(0L);
 		task2.setOverdueInstanceCount(0L);
 
-		testGetProcessTasksPage_addTask(_process.getId(), task2, "2.0");
+		testGetProcessTasksPage_addTask(
+			_process.getId(), "COMPLETED", task2, "2.0");
 
 		Page<Task> page = taskResource.getProcessTasksPage(
 			_process.getId(), true, null, null, null, Pagination.of(1, 2),
@@ -125,6 +128,40 @@ public class TaskResourceTest extends BaseTaskResourceTestCase {
 			Pagination.of(1, 2), "durationAvg:desc");
 
 		assertEquals(Arrays.asList(task2, task1), (List<Task>)page.getItems());
+
+		page = taskResource.getProcessTasksPage(
+			_process.getId(), true,
+			DateUtils.addHours(RandomTestUtil.nextDate(), -1),
+			DateUtils.addHours(RandomTestUtil.nextDate(), -2), null,
+			Pagination.of(1, 2), "durationAvg:desc");
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(
+				new Task() {
+					{
+						breachedInstanceCount = 0L;
+						durationAvg = 0L;
+						instanceCount = 0L;
+						key = task1.getKey();
+						name = task1.getName();
+						onTimeInstanceCount = 0L;
+						overdueInstanceCount = 0L;
+					}
+				},
+				new Task() {
+					{
+						breachedInstanceCount = 0L;
+						durationAvg = 0L;
+						instanceCount = 0L;
+						key = task2.getKey();
+						name = task2.getName();
+						onTimeInstanceCount = 0L;
+						overdueInstanceCount = 0L;
+					}
+				}),
+			(List<Task>)page.getItems());
 
 		task1.setDurationAvg(0L);
 		task1.setInstanceCount(0L);
