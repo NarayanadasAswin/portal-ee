@@ -22,7 +22,7 @@ exports[`Should render component 1`] = `
     running
   </td>
   <td>
-    
+    1min
   </td>
   <td>
     May 06
@@ -145,6 +145,7 @@ exports[`Should render component 2`] = `
     >
       <SLAListItem
         dateModified={2019-05-06T20:32:18.000Z}
+        duration={58000}
         instancesCount="10"
         onTime="5"
         overdue="5"
@@ -299,7 +300,9 @@ exports[`Should render component 2`] = `
           >
             running
           </td>
-          <td />
+          <td>
+            1min
+          </td>
           <td>
             May 06
           </td>
@@ -562,6 +565,7 @@ exports[`Should render component blocked 1`] = `
     >
       <SLAListItem
         dateModified={2019-05-06T20:32:18.000Z}
+        duration={58000}
         instancesCount="10"
         onTime="5"
         overdue="5"
@@ -733,7 +737,9 @@ exports[`Should render component blocked 1`] = `
           >
             blocked
           </td>
-          <td />
+          <td>
+            1min
+          </td>
           <td>
             May 06
           </td>
