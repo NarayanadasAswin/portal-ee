@@ -21,6 +21,7 @@ test('Should render component', () => {
 				dateModified={
 					new Date(Date.UTC('2019', '04', '06', '20', '32', '18'))
 				}
+				duration={58000}
 				id={1234}
 				instancesCount="10"
 				onTime="5"
@@ -42,6 +43,7 @@ test('Should render component', () => {
 				dateModified={
 					new Date(Date.UTC('2019', '04', '06', '20', '32', '18'))
 				}
+				duration={58000}
 				instancesCount="10"
 				onTime="5"
 				overdue="5"
@@ -68,6 +70,7 @@ test('Should render component blocked', () => {
 				dateModified={
 					new Date(Date.UTC('2019', '04', '06', '20', '32', '18'))
 				}
+				duration={58000}
 				instancesCount="10"
 				onTime="5"
 				overdue="5"

@@ -13,23 +13,22 @@ import {cleanup, render} from '@testing-library/react';
 import PerformanceByStepCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/PerformanceByStepCard.es';
 import React from 'react';
 
-const items = [
-	{
-		durationAvg: 10800000,
-		instanceCount: 10,
-		name: 'Review',
-		overdueInstanceCount: 3
-	},
-	{
-		durationAvg: 475200000,
-		instanceCount: 31,
-		name: 'Update',
-		overdueInstanceCount: 7
-	}
-];
-
 describe('The performance by step table component should', () => {
 	let getAllByTestId;
+	const items = [
+		{
+			durationAvg: 10800000,
+			instanceCount: 10,
+			name: 'Review',
+			overdueInstanceCount: 3
+		},
+		{
+			durationAvg: 475200000,
+			instanceCount: 31,
+			name: 'Update',
+			overdueInstanceCount: 7
+		}
+	];
 
 	afterEach(cleanup);
 
@@ -60,5 +59,40 @@ describe('The performance by step table component should', () => {
 
 		expect(durations[0].innerHTML).toBe('3h');
 		expect(durations[1].innerHTML).toBe('5d 12h');
+	});
+});
+
+describe('The performance by step table component, when duration has less than 60 seconds, should', () => {
+	let getAllByTestId;
+	const items = [
+		{
+			durationAvg: 58000,
+			instanceCount: 10,
+			name: 'Review',
+			overdueInstanceCount: 3
+		},
+		{
+			durationAvg: 0,
+			instanceCount: 31,
+			name: 'Update',
+			overdueInstanceCount: 7
+		}
+	];
+
+	afterEach(cleanup);
+
+	beforeEach(() => {
+		const renderResult = render(
+			<PerformanceByStepCard.Table items={items} />
+		);
+
+		getAllByTestId = renderResult.getAllByTestId;
+	});
+
+	test('Be rendered with "1min" and "0min" durations', () => {
+		const durations = getAllByTestId('avgCompletionTime');
+
+		expect(durations[0].innerHTML).toBe('1min');
+		expect(durations[1].innerHTML).toBe('0min');
 	});
 });
