@@ -39,12 +39,15 @@ export function formatDuration(millisecondsDuration) {
 			label: Liferay.Language.get('minutes-abbreviation'),
 			value: duration.minutes
 		}
-	];
+	].filter(part => part.value > 0);
 
-	return durationParts
-		.filter(part => part.value > 0)
-		.map(part => `${part.value}${part.label}`)
-		.join(' ');
+	if (!durationParts.length) {
+		return `${duration.seconds ? 1 : 0}${Liferay.Language.get(
+			'minutes-abbreviation'
+		)}`;
+	}
+
+	return durationParts.map(part => `${part.value}${part.label}`).join(' ');
 }
 
 export function formatHours(hours, minutes) {
@@ -65,6 +68,7 @@ export function getDurationValues(durationValue) {
 		// eslint-disable-next-line radix
 		days: parseInt(fullDuration.asDays()) || null,
 		hours: fullDuration.hours() || null,
-		minutes: fullDuration.minutes() || null
+		minutes: fullDuration.minutes() || null,
+		seconds: fullDuration.seconds() || null
 	};
 }
