@@ -1099,6 +1099,16 @@
     "@clayui/shared" "^3.0.1"
     classnames "^2.2.6"
 
+"@clayui/tooltip@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@clayui/tooltip/-/tooltip-3.0.1.tgz#61d87949b477b6a6257bc0776040199b13d4b544"
+  integrity sha512-R4TeqSQCzuv+aDDm2FNLWtDDWvPG5SFafVWDPieBgVjI5jJmdGgnF2B0ZRFHaec2cNGSurvrUe4o5bbT3QDhDQ==
+  dependencies:
+    "@clayui/shared" "^3.0.1"
+    classnames "^2.2.6"
+    metal-position "^2.1.2"
+    warning "^4.0.3"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.3.tgz#099139eaec7ebf07a27c1786a3ff64f39464d2ef"
