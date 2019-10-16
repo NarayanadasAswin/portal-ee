@@ -138,14 +138,12 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 			"workflow-metrics-instances",
 			"workflow-metrics-sla-process-results", "workflow-metrics-tokens");
 
-		BooleanQuery booleanQuery = _queries.booleanQuery();
+		BooleanQuery booleanQuery = _createBooleanQuery(
+			new Long[0], processId, new String[0], new String[0]);
 
 		searchSearchRequest.setQuery(
 			booleanQuery.addMustQueryClauses(
-				_queries.term("companyId", contextCompany.getCompanyId()),
-				_queries.term("deleted", Boolean.FALSE),
-				_queries.term("instanceId", instanceId),
-				_queries.term("processId", processId)));
+				_queries.term("instanceId", instanceId)));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
