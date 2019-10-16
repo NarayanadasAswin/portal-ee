@@ -10,19 +10,9 @@
  */
 
 import {formatDuration} from '../../../shared/util/duration.es';
-import {formatNumber} from '../../../shared/util/numeral.es';
+import {getFormattedPercentage} from '../../../shared/util/util.es';
 import PerformanceByStepCard from './PerformanceByStepCard.es';
 import React from 'react';
-
-const getSLABreachedPercentage = (instanceCount, overdueInstanceCount) => {
-	let percentage = 0;
-
-	if (instanceCount) {
-		percentage = overdueInstanceCount / instanceCount;
-	}
-
-	return formatNumber(percentage, '0[.]00%');
-};
 
 const Table = ({items = []}) => (
 	<div className="mb-3 table-scrollable table-responsive">
@@ -54,9 +44,9 @@ const Table = ({items = []}) => (
 
 const Item = ({durationAvg, instanceCount, name, overdueInstanceCount}) => {
 	const formattedDuration = formatDuration(durationAvg);
-	const percentage = getSLABreachedPercentage(
-		instanceCount,
-		overdueInstanceCount
+	const formattedPercentage = getFormattedPercentage(
+		overdueInstanceCount,
+		instanceCount
 	);
 
 	return (
@@ -64,7 +54,7 @@ const Item = ({durationAvg, instanceCount, name, overdueInstanceCount}) => {
 			<td data-testid="stepName">{name}</td>
 
 			<td className="text-right" data-testid="slaBreached">
-				{`${overdueInstanceCount} (${percentage})`}
+				{`${overdueInstanceCount} (${formattedPercentage})`}
 			</td>
 
 			<td className="text-right" data-testid="avgCompletionTime">
