@@ -9,6 +9,8 @@
  * distribution rights of the Software.
  */
 
+import {formatNumber} from './numeral.es';
+
 /**
  * Returns the percent number passing as
  * parameter the current number and total number.
@@ -23,6 +25,19 @@ const getPercentage = (number1, number2) => {
 };
 
 /**
+ * Returns the formatted percent number passing as
+ * parameter the current number and total number.
+ * @param {number} number1
+ * @param {number} number2
+ * @returns {number}
+ */
+const getFormattedPercentage = (number1, number2) => {
+	const percentage = getPercentage(number1, number2);
+
+	return formatNumber(percentage, '0[.]00%');
+};
+
+/**
  * Return true if number is valid
  * @param {number} number
  */
@@ -30,4 +45,4 @@ const isValidNumber = number => {
 	return !isNaN(number) && number !== Infinity ? true : false;
 };
 
-export {getPercentage, isValidNumber};
+export {getFormattedPercentage, getPercentage, isValidNumber};
