@@ -50,16 +50,20 @@ const InstanceListItem = ({
 	dateCreated,
 	id,
 	slaStatus,
+	status,
 	taskNames = []
 }) => {
+	const completed = status === 'Completed';
 	const {setInstanceId} = useContext(InstanceListContext);
 	const statusIcon = getStatusIcon(slaStatus);
 
 	const updateInstanceId = () => setInstanceId(id);
 
-	const formattedAssignees = assigneeUsers
-		? assigneeUsers.map(assigneeUser => assigneeUser.name).join(', ')
-		: '';
+	const formattedAssignees = !completed
+		? assigneeUsers
+			? assigneeUsers.map(assigneeUser => assigneeUser.name).join(', ')
+			: Liferay.Language.get('unassigned')
+		: Liferay.Language.get('not-available');
 
 	return (
 		<tr data-testid="instanceRow">
@@ -94,7 +98,7 @@ const InstanceListItem = ({
 			<td data-testid="assetInfoCell">{`${assetType}: ${assetTitle}`}</td>
 
 			<td data-testid="taskNamesCell">
-				{taskNames.length
+				{!completed
 					? taskNames.join(', ')
 					: Liferay.Language.get('completed')}
 			</td>
