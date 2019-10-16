@@ -116,8 +116,8 @@ public class TaskResourceImpl
 
 			return Page.of(
 				_getTasks(
-					GetterUtil.getBoolean(completed), fieldSort, pagination,
-					processId, taskBuckets, tasksMap),
+					GetterUtil.getBoolean(completed), dateEnd, dateStart,
+					fieldSort, pagination, processId, taskBuckets, tasksMap),
 				pagination, count);
 		}
 
@@ -199,18 +199,25 @@ public class TaskResourceImpl
 	}
 
 	private BooleanQuery _createSLATaskResultsBooleanQuery(
-		boolean completed, long processId, Set<String> taskNames) {
+		boolean completed, Date dateEnd, Date dateStart, long processId,
+		Set<String> taskNames) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
 		if (completed) {
+			if ((dateEnd != null) && (dateStart != null)) {
+				booleanQuery.addMustQueryClauses(
+					_queries.rangeTerm(
+						"completionDate", true, true, _format(dateStart),
+						_format(dateEnd)));
+			}
+
 			booleanQuery.addMustNotQueryClauses(
 				_queries.term("status", WorkfowMetricsSLAStatus.RUNNING));
 		}
 		else {
 			booleanQuery.addMustNotQueryClauses(
-				_queries.term("status", WorkfowMetricsSLAStatus.COMPLETED));
-			booleanQuery.addMustNotQueryClauses(
+				_queries.term("status", WorkfowMetricsSLAStatus.COMPLETED),
 				_queries.term("status", WorkfowMetricsSLAStatus.EXPIRED));
 		}
 
@@ -271,8 +278,8 @@ public class TaskResourceImpl
 	}
 
 	private TermsAggregationResult _getSLATermsAggregationResult(
-		boolean completed, FieldSort fieldSort, Pagination pagination,
-		long processId, Set<String> taskNames) {
+		boolean completed, Date dateEnd, Date dateStart, FieldSort fieldSort,
+		Pagination pagination, long processId, Set<String> taskNames) {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
@@ -316,7 +323,8 @@ public class TaskResourceImpl
 
 		searchSearchRequest.setIndexNames("workflow-metrics-sla-task-results");
 		searchSearchRequest.setQuery(
-			_createSLATaskResultsBooleanQuery(completed, processId, taskNames));
+			_createSLATaskResultsBooleanQuery(
+				completed, dateEnd, dateStart, processId, taskNames));
 
 		SearchSearchResponse searchSearchResponse =
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest);
@@ -394,15 +402,16 @@ public class TaskResourceImpl
 	}
 
 	private Collection<Task> _getTasks(
-		boolean completed, FieldSort fieldSort, Pagination pagination,
-		long processId, Map<String, Bucket> taskBuckets,
+		boolean completed, Date dateEnd, Date dateStart, FieldSort fieldSort,
+		Pagination pagination, long processId, Map<String, Bucket> taskBuckets,
 		Map<String, Task> tasksMap) {
 
 		List<Task> tasks = new LinkedList<>();
 
 		TermsAggregationResult slaTermsAggregationResult =
 			_getSLATermsAggregationResult(
-				completed, fieldSort, pagination, processId, tasksMap.keySet());
+				completed, dateEnd, dateStart, fieldSort, pagination, processId,
+				tasksMap.keySet());
 
 		if (_isOrderByDurationAvg(fieldSort.getField()) ||
 			_isOrderByInstanceCount(fieldSort.getField())) {
