@@ -89,7 +89,7 @@ const Table = ({items}) => {
 							<ListHeadItem
 								name="durationAvg"
 								title={Liferay.Language.get(
-									'avg-completion-time'
+									'average-completion-time'
 								)}
 							/>
 						</th>
