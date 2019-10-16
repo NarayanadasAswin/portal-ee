@@ -11,6 +11,7 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {AppContext} from '../../AppContext.es';
+import {ChildLink} from '../../../shared/components/router/routerWrapper.es';
 import EmptyState from '../../../shared/components/list/EmptyState.es';
 import {ErrorContext} from '../../../shared/components/request/Error.es';
 import Icon from '../../../shared/components/Icon.es';
@@ -21,7 +22,7 @@ import Request from '../../../shared/components/request/Request.es';
 import {TimeRangeContext} from '../filter/store/TimeRangeStore.es';
 
 const Body = ({processId}) => {
-	const {client} = useContext(AppContext);
+	const {client, defaultDelta} = useContext(AppContext);
 	const {getSelectedTimeRange} = useContext(TimeRangeContext);
 	const {setError} = useContext(ErrorContext);
 	const {setLoading} = useContext(LoadingContext);
@@ -46,6 +47,8 @@ const Body = ({processId}) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [timeRange]);
 
+	const viewAllStepsUrl = `/performance/${processId}/${defaultDelta}/1/overdueInstanceCount:desc`;
+
 	return (
 		<Request.Success>
 			<Panel.Body>
@@ -54,14 +57,17 @@ const Body = ({processId}) => {
 						<PerformanceByStepCard.Table items={data.items} />
 
 						<div className="mb-1 text-right">
-							<button className="border-0 btn btn-secondary btn-sm">
-								<span data-testid="viewAllSteps">
-									{Liferay.Language.get('view-all-steps') +
-										` (${data.totalCount})`}
-								</span>
+							<ChildLink to={viewAllStepsUrl}>
+								<button className="border-0 btn btn-secondary btn-sm">
+									<span data-testid="viewAllSteps">
+										{Liferay.Language.get(
+											'view-all-steps'
+										) + ` (${data.totalCount})`}
+									</span>
 
-								<Icon iconName="caret-right-l" />
-							</button>
+									<Icon iconName="caret-right-l" />
+								</button>
+							</ChildLink>
 						</div>
 					</>
 				) : (
