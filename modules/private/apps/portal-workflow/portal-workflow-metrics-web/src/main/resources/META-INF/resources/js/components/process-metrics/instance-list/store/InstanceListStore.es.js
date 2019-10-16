@@ -11,12 +11,12 @@
 
 import React, {createContext, useContext, useState} from 'react';
 import {AppContext} from '../../../AppContext.es';
+import {AssigneeContext} from '../../filter/store/AssigneeStore.es';
+import {getFiltersParam} from '../../../../shared/components/filter/util/filterUtil.es';
 import {ProcessStatusContext} from '../../filter/store/ProcessStatusStore.es';
 import {ProcessStepContext} from '../../filter/store/ProcessStepStore.es';
 import {SLAStatusContext} from '../../filter/store/SLAStatusStore.es';
 import {TimeRangeContext} from '../../filter/store/TimeRangeStore.es';
-import {getFiltersParam} from '../../../../shared/components/filter/util/filterUtil.es';
-import {AssigneeContext} from '../../filter/store/AssigneeStore.es';
 
 const filterConstants = {
 	assignees: 'assigneeUserIds',

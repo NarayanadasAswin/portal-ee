@@ -9,11 +9,11 @@
  * distribution rights of the Software.
  */
 
+import React, {useContext, useEffect, useMemo} from 'react';
 import {
 	InstanceListProvider,
 	InstanceListContext
 } from './store/InstanceListStore.es';
-import React, {useContext, useEffect, useMemo} from 'react';
 import {AppContext} from '../../AppContext.es';
 import EmptyState from '../../../shared/components/list/EmptyState.es';
 import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
