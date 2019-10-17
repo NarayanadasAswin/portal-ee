@@ -12,7 +12,6 @@
 import {Redirect} from 'react-router-dom';
 import MaskedInput from 'react-text-mask';
 import React from 'react';
-import {useContext, useState} from 'react';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 import Icon from '../../shared/components/Icon.es';
@@ -48,6 +47,8 @@ import {
 	validateName,
 	validateNodeKeys
 } from './util/slaFormUtil.es';
+
+const {useContext, useState} = React;
 
 /**
  * SLA form component.
