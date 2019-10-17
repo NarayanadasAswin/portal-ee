@@ -10,10 +10,11 @@
  */
 
 import {cleanup, render} from '@testing-library/react';
-import {AssigneeContext} from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/AssigneeStore.es';
-import AssigneeFilter from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/AssigneeFilter.es';
-import {MockRouter} from '../../../mock/MockRouter.es';
 import React from 'react';
+
+import AssigneeFilter from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/AssigneeFilter.es';
+import {AssigneeContext} from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/AssigneeStore.es';
+import {MockRouter} from '../../../mock/MockRouter.es';
 
 const assignees = [
 	{

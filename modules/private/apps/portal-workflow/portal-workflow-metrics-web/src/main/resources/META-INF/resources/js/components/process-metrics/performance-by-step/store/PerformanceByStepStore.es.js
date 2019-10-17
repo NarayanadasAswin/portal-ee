@@ -10,8 +10,9 @@
  * distribution rights of the Software.
  */
 
-import {AppContext} from '../../../AppContext.es';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+
+import {AppContext} from '../../../AppContext.es';
 
 const usePerformanceData = (page, pageSize, processId, search, sort) => {
 	const {client} = useContext(AppContext);

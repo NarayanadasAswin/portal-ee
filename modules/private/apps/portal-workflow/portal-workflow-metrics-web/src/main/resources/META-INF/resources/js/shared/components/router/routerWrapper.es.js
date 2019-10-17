@@ -10,8 +10,9 @@
  */
 
 import {Link, Redirect, withRouter} from 'react-router-dom';
-import {parse, stringify} from './queryString.es';
 import React from 'react';
+
+import {parse, stringify} from './queryString.es';
 
 class BackLinkWrapper extends React.Component {
 	render() {

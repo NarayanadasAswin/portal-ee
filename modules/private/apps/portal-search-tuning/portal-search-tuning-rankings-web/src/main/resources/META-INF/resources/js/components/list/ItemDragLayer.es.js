@@ -9,10 +9,11 @@
  * distribution rights of the Software.
  */
 
+import {DragLayer as DndDragLayer} from 'react-dnd';
+import React from 'react';
+
 import DRAG_TYPES from '../../utils/drag-types.es';
 import ItemDragPreview from './ItemDragPreview.es';
-import React from 'react';
-import {DragLayer as DndDragLayer} from 'react-dnd';
 
 const LAYER_STYLES = {
 	height: '100%',

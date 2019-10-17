@@ -10,17 +10,18 @@
  */
 
 import {Redirect, Route, HashRouter as Router, Switch} from 'react-router-dom';
-import {AppContext} from './AppContext.es';
-import fetch from '../shared/rest/fetch.es';
+import React from 'react';
+
 import HeaderController from '../shared/components/header-controller/HeaderController.es';
+import {withParams} from '../shared/components/router/routerUtil.es';
+import fetch from '../shared/rest/fetch.es';
+import {AppContext} from './AppContext.es';
+import ProcessListCard from './process-list/ProcessListCard.es';
+import ProcessMetrics from './process-metrics/ProcessMetrics.es';
 import InstanceListCard from './process-metrics/instance-list/InstanceListCard.es';
 import PerformanceByStep from './process-metrics/performance-by-step/PerformanceByStep.es';
-import ProcessMetrics from './process-metrics/ProcessMetrics.es';
-import ProcessListCard from './process-list/ProcessListCard.es';
-import React from 'react';
 import SLAForm from './sla/SLAForm.es';
 import SLAListCard from './sla/SLAListCard.es';
-import {withParams} from '../shared/components/router/routerUtil.es';
 
 /**
  * @class

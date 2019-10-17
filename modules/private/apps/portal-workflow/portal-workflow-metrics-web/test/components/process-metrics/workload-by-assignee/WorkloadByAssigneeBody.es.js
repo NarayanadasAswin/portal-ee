@@ -10,11 +10,12 @@
  */
 
 import {cleanup, render, waitForElement} from '@testing-library/react';
-import {MockRouter} from '../../../mock/MockRouter.es';
-import {ProcessStepContext} from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/ProcessStepStore.es';
 import React from 'react';
-import Request from '../../../../src/main/resources/META-INF/resources/js/shared/components/request/Request.es';
+
+import {ProcessStepContext} from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/ProcessStepStore.es';
 import WorkloadByAssigneeCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/workload-by-assignee/WorkloadByAssigneeCard.es';
+import Request from '../../../../src/main/resources/META-INF/resources/js/shared/components/request/Request.es';
+import {MockRouter} from '../../../mock/MockRouter.es';
 
 const items = [
 	{

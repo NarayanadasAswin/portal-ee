@@ -10,9 +10,10 @@
  */
 
 import {cleanup, render, waitForElement} from '@testing-library/react';
-import {MockRouter} from '../../../mock/MockRouter.es';
-import PerformanceByStepCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/PerformanceByStepCard.es';
 import React from 'react';
+
+import PerformanceByStepCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/PerformanceByStepCard.es';
+import {MockRouter} from '../../../mock/MockRouter.es';
 
 const clientMock = {
 	get: jest.fn().mockResolvedValue({data: {}})

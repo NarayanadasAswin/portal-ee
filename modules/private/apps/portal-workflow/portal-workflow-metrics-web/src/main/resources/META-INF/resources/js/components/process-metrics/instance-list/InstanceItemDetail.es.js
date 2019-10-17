@@ -11,10 +11,11 @@
  */
 
 import React, {useContext, useEffect, useState} from 'react';
-import {AppContext} from '../../AppContext.es';
+
 import Icon from '../../../shared/components/Icon.es';
-import {InstanceListContext} from './store/InstanceListStore.es';
 import moment from '../../../shared/util/moment.es';
+import {AppContext} from '../../AppContext.es';
+import {InstanceListContext} from './store/InstanceListStore.es';
 
 function InstanceItemDetail({processId}) {
 	const {client} = useContext(AppContext);

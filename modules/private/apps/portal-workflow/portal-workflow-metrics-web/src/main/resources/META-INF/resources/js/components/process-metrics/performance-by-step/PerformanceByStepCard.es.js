@@ -9,14 +9,15 @@
  * distribution rights of the Software.
  */
 
-import {Item, Table} from './PerformanceByStepTable.es';
-import {Body, Empty} from './PerformanceByStepBody.es';
-import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
-import Panel from '../../../shared/components/Panel.es';
 import React from 'react';
+
+import Panel from '../../../shared/components/Panel.es';
+import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
 import Request from '../../../shared/components/request/Request.es';
 import {TimeRangeFilter} from '../filter/TimeRangeFilter.es';
 import {TimeRangeProvider} from '../filter/store/TimeRangeStore.es';
+import {Body, Empty} from './PerformanceByStepBody.es';
+import {Item, Table} from './PerformanceByStepTable.es';
 
 const Header = () => (
 	<Panel.HeaderWithOptions

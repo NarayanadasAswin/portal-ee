@@ -9,17 +9,18 @@
  * distribution rights of the Software.
  */
 
+import {renderHook} from '@testing-library/react-hooks';
 import {cleanup, render, waitForElement} from '@testing-library/react';
+import React, {useContext} from 'react';
+
 import {
 	ProcessStepContext,
 	ProcessStepProvider,
 	useProcessStep
 } from '../../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/ProcessStepStore.es';
-import React, {useContext} from 'react';
 import {ErrorContext} from '../../../../../src/main/resources/META-INF/resources/js/shared/components/request/Error.es';
-import {MockRouter} from '../../../../mock/MockRouter.es';
-import {renderHook} from '@testing-library/react-hooks';
 import Request from '../../../../../src/main/resources/META-INF/resources/js/shared/components/request/Request.es';
+import {MockRouter} from '../../../../mock/MockRouter.es';
 
 const items = [
 	{
@@ -162,7 +163,7 @@ describe('The time range store, when receiving no items, should', () => {
 	test('Have "All Steps" item on processSteps array, when "withAllSteps" is true', async () => {
 		clientMock.get.mockResolvedValueOnce({data: {items: []}});
 
-		const {result, waitForNextUpdate, unmount} = renderHook(
+		const {result, unmount, waitForNextUpdate} = renderHook(
 			({processStepKeys}) => useProcessStep(12345, processStepKeys, true),
 			{
 				initialProps: {
@@ -182,7 +183,7 @@ describe('The time range store, when receiving no items, should', () => {
 	test('Have no items on processSteps array', async () => {
 		clientMock.get.mockResolvedValueOnce({data: {items: []}});
 
-		const {result, waitForNextUpdate, unmount} = renderHook(
+		const {result, unmount, waitForNextUpdate} = renderHook(
 			({processStepKeys}) => useProcessStep(12345, processStepKeys),
 			{
 				initialProps: {

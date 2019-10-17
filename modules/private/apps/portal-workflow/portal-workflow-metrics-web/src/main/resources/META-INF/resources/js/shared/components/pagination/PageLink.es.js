@@ -9,8 +9,8 @@
  * distribution rights of the Software.
  */
 
-import {Link, withRouter} from 'react-router-dom';
 import pathToRegexp from 'path-to-regexp';
+import {Link, withRouter} from 'react-router-dom';
 import React from 'react';
 
 /**
@@ -25,9 +25,7 @@ class PageLink extends React.Component {
 			page
 		} = this.props;
 
-		const pathname = pathToRegexp.compile(path)(
-			Object.assign({}, params, {page})
-		);
+		const pathname = pathToRegexp.compile(path)({...params, page});
 
 		return (
 			<li className="page-item">

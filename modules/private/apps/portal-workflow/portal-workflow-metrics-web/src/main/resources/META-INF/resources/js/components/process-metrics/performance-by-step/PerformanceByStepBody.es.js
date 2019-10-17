@@ -10,16 +10,17 @@
  */
 
 import React, {useContext, useEffect, useState} from 'react';
-import {AppContext} from '../../AppContext.es';
-import {ChildLink} from '../../../shared/components/router/routerWrapper.es';
+
+import Icon from '../../../shared/components/Icon.es';
+import Panel from '../../../shared/components/Panel.es';
 import EmptyState from '../../../shared/components/list/EmptyState.es';
 import {ErrorContext} from '../../../shared/components/request/Error.es';
-import Icon from '../../../shared/components/Icon.es';
 import {LoadingContext} from '../../../shared/components/request/Loading.es';
-import Panel from '../../../shared/components/Panel.es';
-import PerformanceByStepCard from './PerformanceByStepCard.es';
 import Request from '../../../shared/components/request/Request.es';
+import {ChildLink} from '../../../shared/components/router/routerWrapper.es';
+import {AppContext} from '../../AppContext.es';
 import {TimeRangeContext} from '../filter/store/TimeRangeStore.es';
+import PerformanceByStepCard from './PerformanceByStepCard.es';
 
 const Body = ({processId}) => {
 	const {client, defaultDelta} = useContext(AppContext);

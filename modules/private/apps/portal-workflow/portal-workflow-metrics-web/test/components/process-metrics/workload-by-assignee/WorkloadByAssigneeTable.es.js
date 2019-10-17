@@ -11,6 +11,7 @@
 
 import {cleanup, render} from '@testing-library/react';
 import React from 'react';
+
 import WorkloadByAssigneeCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/workload-by-assignee/WorkloadByAssigneeCard.es';
 
 describe('The workload by assignee table should', () => {

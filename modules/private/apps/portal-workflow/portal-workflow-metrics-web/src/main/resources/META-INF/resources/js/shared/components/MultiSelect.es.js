@@ -9,8 +9,9 @@
  * distribution rights of the Software.
  */
 
-import Icon from './Icon.es';
 import React from 'react';
+
+import Icon from './Icon.es';
 
 /**
  * @class

@@ -10,8 +10,9 @@
  */
 
 import {Link} from 'react-router-dom';
-import PageSizeItem from '../../../../src/main/resources/META-INF/resources/js/shared/components/pagination/PageSizeItem.es';
 import React from 'react';
+
+import PageSizeItem from '../../../../src/main/resources/META-INF/resources/js/shared/components/pagination/PageSizeItem.es';
 import {MockRouter as Router} from '../../../mock/MockRouter.es';
 
 test('Should test component click', () => {

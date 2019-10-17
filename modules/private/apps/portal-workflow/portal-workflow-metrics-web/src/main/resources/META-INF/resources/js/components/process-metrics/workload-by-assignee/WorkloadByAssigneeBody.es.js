@@ -10,12 +10,13 @@
  */
 
 import React, {useContext, useEffect, useState, useMemo} from 'react';
-import {AppContext} from '../../AppContext.es';
-import {ErrorContext} from '../../../shared/components/request/Error.es';
+
 import Icon from '../../../shared/components/Icon.es';
+import {ErrorContext} from '../../../shared/components/request/Error.es';
 import {LoadingContext} from '../../../shared/components/request/Loading.es';
-import {ProcessStepContext} from '../filter/store/ProcessStepStore.es';
 import Request from '../../../shared/components/request/Request.es';
+import {AppContext} from '../../AppContext.es';
+import {ProcessStepContext} from '../filter/store/ProcessStepStore.es';
 import WorkloadByAssigneeCard from './WorkloadByAssigneeCard.es';
 
 const Body = ({currentTab, processId, query}) => {

@@ -11,6 +11,7 @@
 
 import ClayCharts from 'clay-charts-react';
 import React from 'react';
+
 import SummaryCard from './SummaryCard.es';
 
 /**

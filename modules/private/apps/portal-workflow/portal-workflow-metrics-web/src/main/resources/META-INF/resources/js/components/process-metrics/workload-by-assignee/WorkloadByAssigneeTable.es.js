@@ -10,9 +10,10 @@
  */
 
 import React from 'react';
-import WorkloadByAssigneeCard from './WorkloadByAssigneeCard.es';
-import {getPercentage} from '../../../shared/util/util.es';
+
 import {formatNumber} from '../../../shared/util/numeral.es';
+import {getPercentage} from '../../../shared/util/util.es';
+import WorkloadByAssigneeCard from './WorkloadByAssigneeCard.es';
 
 const Item = ({
 	currentTab,

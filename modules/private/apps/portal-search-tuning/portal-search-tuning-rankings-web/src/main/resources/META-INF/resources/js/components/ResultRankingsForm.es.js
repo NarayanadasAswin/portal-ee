@@ -9,14 +9,12 @@
  * distribution rights of the Software.
  */
 
-import Alias from './alias/Alias.es';
-import ClayEmptyState, {DISPLAY_STATES} from './shared/ClayEmptyState.es';
-import FormValueDebugger from '../utils/FormValueDebugger.es';
-import List from './list/List.es';
-import PageToolbar from './PageToolbar.es';
-import React, {Component} from 'react';
-import ThemeContext from '../ThemeContext.es';
 import ClayTabs from '@clayui/tabs';
+import {PropTypes} from 'prop-types';
+import React, {Component} from 'react';
+
+import ThemeContext from '../ThemeContext.es';
+import FormValueDebugger from '../utils/FormValueDebugger.es';
 import {fetchDocuments} from '../utils/api.es';
 import {
 	isNil,
@@ -25,7 +23,10 @@ import {
 	resultsDataToMap,
 	updateDataMap
 } from '../utils/util.es';
-import {PropTypes} from 'prop-types';
+import PageToolbar from './PageToolbar.es';
+import Alias from './alias/Alias.es';
+import List from './list/List.es';
+import ClayEmptyState, {DISPLAY_STATES} from './shared/ClayEmptyState.es';
 
 const DELTA = 50;
 

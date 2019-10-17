@@ -10,20 +10,21 @@
  */
 
 import {Redirect, Route, HashRouter as Router, Switch} from 'react-router-dom';
-import AlertMessage from './AlertMessage.es';
-import {AppContext} from '../AppContext.es';
-import {ChildLink} from '../../shared/components/router/routerWrapper.es';
-import CompletedItemsCard from './process-items/CompletedItemsCard.es';
-import CompletionVelocityCard from './completion-velocity/CompletionVelocityCard.es';
-import DropDownHeader from './DropDownHeader.es';
-import {getPathname} from '../../shared/components/tabs/TabItem.es';
-import {openErrorToast} from '../../shared/util/toast.es';
-import PendingItemsCard from './process-items/PendingItemsCard.es';
-import PerformanceByStepCard from './performance-by-step/PerformanceByStepCard.es';
 import React from 'react';
-import {sub} from '../../shared/util/lang.es';
-import Tabs from '../../shared/components/tabs/Tabs.es';
+
 import {withParams} from '../../shared/components/router/routerUtil.es';
+import {ChildLink} from '../../shared/components/router/routerWrapper.es';
+import {getPathname} from '../../shared/components/tabs/TabItem.es';
+import Tabs from '../../shared/components/tabs/Tabs.es';
+import {sub} from '../../shared/util/lang.es';
+import {openErrorToast} from '../../shared/util/toast.es';
+import {AppContext} from '../AppContext.es';
+import AlertMessage from './AlertMessage.es';
+import DropDownHeader from './DropDownHeader.es';
+import CompletionVelocityCard from './completion-velocity/CompletionVelocityCard.es';
+import PerformanceByStepCard from './performance-by-step/PerformanceByStepCard.es';
+import CompletedItemsCard from './process-items/CompletedItemsCard.es';
+import PendingItemsCard from './process-items/PendingItemsCard.es';
 import WorkloadByAssigneeCard from './workload-by-assignee/WorkloadByAssigneeCard.es';
 import WorkloadByStepCard from './workload-by-step/WorkloadByStepCard.es';
 

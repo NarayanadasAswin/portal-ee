@@ -9,8 +9,8 @@
  * distribution rights of the Software.
  */
 
-import React from 'react';
 import ReactDOM from 'react-dom';
+import React from 'react';
 
 export default class PortalComponent extends React.Component {
 	constructor(props) {

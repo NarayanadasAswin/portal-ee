@@ -9,18 +9,19 @@
  * distribution rights of the Software.
  */
 
-import {AppContext, AppStatus} from '../AppContext.es';
-import {openErrorToast, openSuccessToast} from '../../shared/util/toast.es';
-import {ChildLink} from '../../shared/components/router/routerWrapper.es';
+import React from 'react';
+
 import Icon from '../../shared/components/Icon.es';
+import Tooltip from '../../shared/components/Tooltip.es';
 import ListView from '../../shared/components/list/ListView.es';
 import PaginationBar from '../../shared/components/pagination/PaginationBar.es';
-import React from 'react';
+import {ChildLink} from '../../shared/components/router/routerWrapper.es';
+import {openErrorToast, openSuccessToast} from '../../shared/util/toast.es';
+import {AppContext, AppStatus} from '../AppContext.es';
 import {REQUEST_ORIGIN_TYPE_FETCH} from './Constants.es';
 import SLAConfirmDialog from './SLAConfirmDialog.es';
 import SLAListCardContext from './SLAListCardContext.es';
 import SLAListTable from './SLAListTable.es';
-import Tooltip from '../../shared/components/Tooltip.es';
 
 class SLAListCard extends React.Component {
 	constructor(props) {

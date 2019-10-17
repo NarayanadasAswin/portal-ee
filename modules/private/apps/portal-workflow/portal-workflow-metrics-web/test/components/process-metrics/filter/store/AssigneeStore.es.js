@@ -9,16 +9,17 @@
  * distribution rights of the Software.
  */
 
+import {renderHook} from '@testing-library/react-hooks';
+import {cleanup, render, waitForElement} from '@testing-library/react';
+import React, {useContext} from 'react';
+
 import {
 	AssigneeContext,
 	AssigneeProvider,
 	useAssignee
 } from '../../../../../src/main/resources/META-INF/resources/js/components/process-metrics/filter/store/AssigneeStore.es';
-import {cleanup, render, waitForElement} from '@testing-library/react';
-import React, {useContext} from 'react';
-import {MockRouter} from '../../../../mock/MockRouter.es';
-import {renderHook} from '@testing-library/react-hooks';
 import Request from '../../../../../src/main/resources/META-INF/resources/js/shared/components/request/Request.es';
+import {MockRouter} from '../../../../mock/MockRouter.es';
 
 const items = [
 	{
@@ -149,7 +150,7 @@ describe('The assignee store, when receiving no items, should', () => {
 	test('Have only the "Unassigned" item', async () => {
 		clientMock.get.mockResolvedValueOnce({data: {}});
 
-		const {result, waitForNextUpdate, unmount} = renderHook(
+		const {result, unmount, waitForNextUpdate} = renderHook(
 			({assigneeKeys}) => useAssignee(assigneeKeys),
 			{
 				initialProps: {

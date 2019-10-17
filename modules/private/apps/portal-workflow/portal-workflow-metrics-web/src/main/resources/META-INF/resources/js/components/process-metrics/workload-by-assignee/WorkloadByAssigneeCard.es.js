@@ -9,14 +9,15 @@
  * distribution rights of the Software.
  */
 
-import {Item, Table} from './WorkloadByAssigneeTable.es';
-import {Body, Empty} from './WorkloadByAssigneeBody.es';
-import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
+import React, {useState} from 'react';
+
 import Panel from '../../../shared/components/Panel.es';
+import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
+import Request from '../../../shared/components/request/Request.es';
 import ProcessStepFilter from '../filter/ProcessStepFilter.es';
 import {ProcessStepProvider} from '../filter/store/ProcessStepStore.es';
-import React, {useState} from 'react';
-import Request from '../../../shared/components/request/Request.es';
+import {Body, Empty} from './WorkloadByAssigneeBody.es';
+import {Item, Table} from './WorkloadByAssigneeTable.es';
 import Tabs from './WorkloadByAssigneeTabs.es';
 
 const Header = () => (

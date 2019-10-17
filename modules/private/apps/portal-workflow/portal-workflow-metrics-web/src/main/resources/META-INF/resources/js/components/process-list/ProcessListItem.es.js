@@ -9,9 +9,10 @@
  * distribution rights of the Software.
  */
 
-import {AppContext} from '../AppContext.es';
-import {ChildLink} from '../../shared/components/router/routerWrapper.es';
 import React from 'react';
+
+import {ChildLink} from '../../shared/components/router/routerWrapper.es';
+import {AppContext} from '../AppContext.es';
 
 /**
  * @class

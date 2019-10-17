@@ -9,16 +9,17 @@
  * distribution rights of the Software.
  */
 
+import React, {useContext} from 'react';
+
+import ListHeadItem from '../../../shared/components/list/ListHeadItem.es';
+import PaginationBar from '../../../shared/components/pagination/PaginationBar.es';
+import Search from '../../../shared/components/pagination/Search.es';
+import {formatDuration} from '../../../shared/util/duration.es';
+import {getFormattedPercentage} from '../../../shared/util/util.es';
 import {
 	PerformanceDataContext,
 	PerformanceDataProvider
 } from './store/PerformanceByStepStore.es';
-import React, {useContext} from 'react';
-import {formatDuration} from '../../../shared/util/duration.es';
-import {getFormattedPercentage} from '../../../shared/util/util.es';
-import ListHeadItem from '../../../shared/components/list/ListHeadItem.es';
-import PaginationBar from '../../../shared/components/pagination/PaginationBar.es';
-import Search from '../../../shared/components/pagination/Search.es';
 
 function PerformanceByStep({page, pageSize, processId, search, sort}) {
 	return (
@@ -109,7 +110,7 @@ const Table = ({items}) => {
 	);
 };
 
-const Item = ({name, durationAvg, instanceCount, overdueInstanceCount}) => {
+const Item = ({durationAvg, instanceCount, name, overdueInstanceCount}) => {
 	const formattedDuration = formatDuration(durationAvg);
 	const formattedPercentage = getFormattedPercentage(
 		overdueInstanceCount,

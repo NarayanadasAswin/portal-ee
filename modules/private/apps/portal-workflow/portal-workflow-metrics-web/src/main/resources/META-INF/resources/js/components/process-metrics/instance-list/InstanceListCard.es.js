@@ -10,22 +10,23 @@
  */
 
 import React, {useContext, useEffect, useMemo} from 'react';
+
+import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
+import EmptyState from '../../../shared/components/list/EmptyState.es';
+import ReloadButton from '../../../shared/components/list/ReloadButton.es';
+import LoadingState from '../../../shared/components/loading/LoadingState.es';
+import PaginationBar from '../../../shared/components/pagination/PaginationBar.es';
+import PromisesResolver from '../../../shared/components/request/PromisesResolver.es';
+import Request from '../../../shared/components/request/Request.es';
+import {AppContext} from '../../AppContext.es';
+import InstanceItemDetail from './InstanceItemDetail.es';
+import InstanceListFilters from './InstanceListFilters.es';
+import InstanceListTable from './InstanceListTable.es';
+import {InstanceFiltersProvider} from './store/InstanceFiltersStore.es';
 import {
 	InstanceListProvider,
 	InstanceListContext
 } from './store/InstanceListStore.es';
-import {AppContext} from '../../AppContext.es';
-import EmptyState from '../../../shared/components/list/EmptyState.es';
-import {getFiltersParam} from '../../../shared/components/filter/util/filterUtil.es';
-import {InstanceFiltersProvider} from './store/InstanceFiltersStore.es';
-import InstanceItemDetail from './InstanceItemDetail.es';
-import InstanceListFilters from './InstanceListFilters.es';
-import InstanceListTable from './InstanceListTable.es';
-import LoadingState from '../../../shared/components/loading/LoadingState.es';
-import PaginationBar from '../../../shared/components/pagination/PaginationBar.es';
-import PromisesResolver from '../../../shared/components/request/PromisesResolver.es';
-import ReloadButton from '../../../shared/components/list/ReloadButton.es';
-import Request from '../../../shared/components/request/Request.es';
 
 export function InstanceListCard({page, pageSize, processId, query}) {
 	const filters = getFiltersParam(query);

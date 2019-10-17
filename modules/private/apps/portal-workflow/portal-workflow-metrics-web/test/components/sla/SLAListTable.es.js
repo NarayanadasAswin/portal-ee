@@ -9,10 +9,11 @@
  * distribution rights of the Software.
  */
 
-import React from 'react';
 import renderer from 'react-test-renderer';
-import {MockRouter as Router} from '../../mock/MockRouter.es';
+import React from 'react';
+
 import SLAListTable from '../../../src/main/resources/META-INF/resources/js/components/sla/SLAListTable.es';
+import {MockRouter as Router} from '../../mock/MockRouter.es';
 
 test('Should render component', () => {
 	const data = [

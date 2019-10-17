@@ -9,9 +9,10 @@
  * distribution rights of the Software.
  */
 
-import DisplayResult from '../../../../src/main/resources/META-INF/resources/js/shared/components/pagination/DisplayResult.es';
-import React from 'react';
 import renderer from 'react-test-renderer';
+import React from 'react';
+
+import DisplayResult from '../../../../src/main/resources/META-INF/resources/js/shared/components/pagination/DisplayResult.es';
 
 test('Should render component', () => {
 	const component = renderer.create(

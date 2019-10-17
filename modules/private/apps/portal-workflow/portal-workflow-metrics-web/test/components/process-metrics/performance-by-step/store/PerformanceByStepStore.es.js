@@ -9,12 +9,14 @@
  * distribution rights of the Software.
  */
 
-import React from 'react';
-import fetch from '../../../../mock/fetch.es';
-import {AppContext} from '../../../../../src/main/resources/META-INF/resources/js/components/AppContext.es';
-import {MockRouter as Router} from '../../../../mock/MockRouter.es';
 import {render} from '@testing-library/react';
+import React from 'react';
+
+import {AppContext} from '../../../../../src/main/resources/META-INF/resources/js/components/AppContext.es';
 import {PerformanceDataProvider} from '../../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/store/PerformanceByStepStore.es';
+import {MockRouter as Router} from '../../../../mock/MockRouter.es';
+import fetch from '../../../../mock/fetch.es';
+
 import '@testing-library/jest-dom/extend-expect';
 
 test('Should render velocity data provider', async () => {

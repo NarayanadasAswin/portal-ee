@@ -9,10 +9,11 @@
  * distribution rights of the Software.
  */
 
+import React from 'react';
+
 import {formatDuration} from '../../../shared/util/duration.es';
 import {getFormattedPercentage} from '../../../shared/util/util.es';
 import PerformanceByStepCard from './PerformanceByStepCard.es';
-import React from 'react';
 
 const Table = ({items = []}) => (
 	<div className="mb-3 table-scrollable table-responsive">

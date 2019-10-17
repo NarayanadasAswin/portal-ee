@@ -10,8 +10,9 @@
  */
 
 import React, {useContext} from 'react';
-import {AssigneeContext} from './store/AssigneeStore.es';
+
 import Filter from '../../../shared/components/filter/Filter.es';
+import {AssigneeContext} from './store/AssigneeStore.es';
 
 const AssigneeFilter = ({
 	filterKey = 'assigneeUserIds',

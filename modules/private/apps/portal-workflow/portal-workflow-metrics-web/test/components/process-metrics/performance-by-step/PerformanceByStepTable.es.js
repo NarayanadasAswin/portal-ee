@@ -10,8 +10,9 @@
  */
 
 import {cleanup, render} from '@testing-library/react';
-import PerformanceByStepCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/PerformanceByStepCard.es';
 import React from 'react';
+
+import PerformanceByStepCard from '../../../../src/main/resources/META-INF/resources/js/components/process-metrics/performance-by-step/PerformanceByStepCard.es';
 
 describe('The performance by step table component should', () => {
 	let getAllByTestId;

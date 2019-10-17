@@ -9,21 +9,19 @@
  * distribution rights of the Software.
  */
 
-import AddResultSearchBar from './AddResultSearchBar.es';
 import ClayButton from '@clayui/button';
-import ClayEmptyState, {DISPLAY_STATES} from '../shared/ClayEmptyState.es';
+import {useResource} from '@clayui/data-provider';
+import {ClayCheckbox} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal, {useModal} from '@clayui/modal';
 import {ClayPaginationBarWithBasicItems} from '@clayui/pagination-bar';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import getCN from 'classnames';
-import Item from '../list/Item.es';
 import PropTypes from 'prop-types';
 import React, {useContext, useState} from 'react';
+
 import ThemeContext from '../../ThemeContext.es';
-import {ClayCheckbox} from '@clayui/form';
-import {buildUrl, resultsDataToMap, toggleListItem} from '../../utils/util.es';
 import {
 	DELTAS,
 	DEFAULT_DELTA,
@@ -31,7 +29,10 @@ import {
 	KEY_CODES
 } from '../../utils/constants.es';
 import {getPluralMessage} from '../../utils/language.es';
-import {useResource} from '@clayui/data-provider';
+import {buildUrl, resultsDataToMap, toggleListItem} from '../../utils/util.es';
+import Item from '../list/Item.es';
+import ClayEmptyState, {DISPLAY_STATES} from '../shared/ClayEmptyState.es';
+import AddResultSearchBar from './AddResultSearchBar.es';
 
 /**
  * A button that opens a modal to be able to search, select, and add results.
@@ -71,7 +72,7 @@ function AddResultModal({
 		onClose: _handleCloseModal
 	});
 
-	const {resource, refetch} = useResource({
+	const {refetch, resource} = useResource({
 		fetchOptions: FETCH_OPTIONS,
 		link: buildUrl(fetchDocumentsSearchUrl, {
 			[`${namespace}companyId`]: companyId,

@@ -9,9 +9,10 @@
  * distribution rights of the Software.
  */
 
-import {Link, withRouter} from 'react-router-dom';
 import pathToRegexp from 'path-to-regexp';
+import {Link, withRouter} from 'react-router-dom';
 import React from 'react';
+
 import {sub} from '../../shared/util/lang.es';
 
 /**
