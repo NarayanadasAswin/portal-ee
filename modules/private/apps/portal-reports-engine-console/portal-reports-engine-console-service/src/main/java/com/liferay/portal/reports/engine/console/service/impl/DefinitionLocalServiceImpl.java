@@ -251,9 +251,6 @@ public class DefinitionLocalServiceImpl extends DefinitionLocalServiceBaseImpl {
 
 		String directoryName = definition.getAttachmentsDir();
 
-		DLStoreUtil.addDirectory(
-			companyId, CompanyConstants.SYSTEM, directoryName);
-
 		String fileLocation = directoryName.concat(
 			StringPool.SLASH
 		).concat(

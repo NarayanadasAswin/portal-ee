@@ -103,15 +103,6 @@ public class DLKeyStoreManagerImpl extends BaseKeyStoreManagerImpl {
 				new FileOutputStream(tempFile),
 				samlKeyStorePassword.toCharArray());
 
-			if (!DLStoreUtil.hasDirectory(
-					getCompanyId(), CompanyConstants.SYSTEM,
-					_SAML_KEYSTORE_DIR_NAME)) {
-
-				DLStoreUtil.addDirectory(
-					getCompanyId(), CompanyConstants.SYSTEM,
-					_SAML_KEYSTORE_DIR_NAME);
-			}
-
 			if (DLStoreUtil.hasFile(
 					getCompanyId(), CompanyConstants.SYSTEM,
 					_SAML_KEYSTORE_PATH)) {
