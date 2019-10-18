@@ -22,7 +22,7 @@ AUI().use('escape', 'aui-lang', function(A) {
 		' data-parameterValue="{parameterValue}"' +
 		' data-parameterType="{parameterType}"' +
 		' type="button">' +
-		'<i class="icon-remove" aria-label="Remove"></i>' +
+		Liferay.Util.getLexiconIconTpl('times') +
 		'</button>' +
 		'</div>';
 
