@@ -43,10 +43,10 @@ public class AdminResourcePermissionChecker {
 	}
 
 	public static boolean contains(
-		PermissionChecker permissionChecker, long classPK, String actionId) {
+		PermissionChecker permissionChecker, long groupId, String actionId) {
 
 		return _portletResourcePermission.contains(
-			permissionChecker, classPK, actionId);
+			permissionChecker, groupId, actionId);
 	}
 
 	@Reference(
