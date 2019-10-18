@@ -15,7 +15,6 @@
 package com.liferay.portal.reports.engine.console.web.internal.permission;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.reports.engine.console.constants.ReportsEngineConsoleConstants;
@@ -36,10 +35,7 @@ public class AdminResourcePermissionChecker {
 			PermissionChecker permissionChecker, long groupId, String actionId)
 		throws PortalException {
 
-		if (!contains(permissionChecker, groupId, actionId)) {
-			throw new PrincipalException.MustHavePermission(
-				permissionChecker, RESOURCE_NAME, groupId, actionId);
-		}
+		_portletResourcePermission.check(permissionChecker, groupId, actionId);
 	}
 
 	public static boolean contains(
