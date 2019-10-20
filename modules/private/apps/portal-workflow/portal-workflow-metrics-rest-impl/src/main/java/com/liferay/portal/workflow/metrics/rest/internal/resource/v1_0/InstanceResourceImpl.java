@@ -139,7 +139,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 			"workflow-metrics-sla-process-results", "workflow-metrics-tokens");
 
 		BooleanQuery booleanQuery = _createBooleanQuery(
-			new Long[0], processId, new String[0], new String[0]);
+			new Long[0], processId, new String[0]);
 
 		searchSearchRequest.setQuery(
 			booleanQuery.addMustQueryClauses(
