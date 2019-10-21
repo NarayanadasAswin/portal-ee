@@ -249,7 +249,7 @@ build.repository.private.password=${build.repository.private.password}
 build.repository.private.url=${build.repository.private.url}
 build.repository.private.username=${build.repository.private.username}
 
-git.working.branch.name=@{git.working.branch.name}
+git.working.branch.name=${git.working.branch.name}
 
 snapshot.bundle.base.url=${snapshot.bundle.base.url}</echo>
 
