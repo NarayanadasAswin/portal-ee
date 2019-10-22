@@ -245,13 +245,13 @@
 ##
 
 build.profile=dxp
-build.repository.private.password=${build.repository.private.password[@{to.branch.name}]}
-build.repository.private.url=${build.repository.private.url[@{to.branch.name}]}
-build.repository.private.username=${build.repository.private.username[@{to.branch.name}]}
+build.repository.private.password=${build.repository.private.password}
+build.repository.private.url=${build.repository.private.url}
+build.repository.private.username=${build.repository.private.username}
 
 git.working.branch.name=${git.working.branch.name}
 
-snapshot.bundle.base.url=${snapshot.bundle.base.url[@{to.branch.name}]}</echo>
+snapshot.bundle.base.url=${snapshot.bundle.base.url}</echo>
 
 			<!-- release.profile-dxp.properties -->
 
