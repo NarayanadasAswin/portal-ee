@@ -226,6 +226,7 @@
 	</macrodef>
 
 	<macrodef name="prepare-profile-dxp-properties">
+		<attribute name="from.branch.name" />
 		<attribute name="to.branch.name" />
 
 		<sequential>
@@ -292,25 +293,20 @@ liferay.portal.branch=${liferay.portal.branch[@{to.branch.name}]}
 test.run.environment=${test.run.environment[@{to.branch.name}]}
 
 testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
-		</sequential>
-	</macrodef>
 
-	<macrodef name="prepare-working-dir">
-		<attribute name="from.branch.name" />
-		<attribute name="to.branch.name" />
+			<!-- sql/portal-data-release.sql -->
 
-		<sequential>
 			<local name="replace.regex.tmp.file" />
 
 			<tempfile createfile="true" deleteonexit="true" property="replace.regex.tmp.file" />
-
-			<!-- sql/portal-data-release.sql -->
 
 			<local name="replace.portal.data.release.sql" />
 
 			<condition property="replace.portal.data.release.sql">
 				<available file="sql/portal-data-release.sql" />
 			</condition>
+
+			<echo if:set="replace.portal.data.release.sql" message="sql/portal-data-release.sql" />
 
 			<replace-regex
 				if:set="replace.portal.data.release.sql"
@@ -577,9 +573,11 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 	</target>
 
 	<target name="prepare-profile-dxp-properties">
+		<property name="from.branch.name" value="${public.branch.name}" />
 		<property name="to.branch.name" value="${private.branch.name}" />
 
 		<prepare-profile-dxp-properties
+			from.branch.name="${from.branch.name}"
 			to.branch.name="${to.branch.name}"
 		/>
 	</target>
@@ -589,10 +587,6 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 		<property name="to.branch.name" value="${private.branch.name}" />
 
 		<prepare-profile-dxp-properties
-			to.branch.name="${to.branch.name}"
-		/>
-
-		<prepare-working-dir
 			from.branch.name="${from.branch.name}"
 			to.branch.name="${to.branch.name}"
 			unless:true="${prepare.working.dir.private}"
