@@ -296,10 +296,6 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 
 			<!-- sql/portal-data-release.sql -->
 
-			<local name="replace.regex.tmp.file" />
-
-			<tempfile createfile="true" deleteonexit="true" property="replace.regex.tmp.file" />
-
 			<local name="replace.portal.data.release.sql" />
 
 			<condition property="replace.portal.data.release.sql">
@@ -308,12 +304,11 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 
 			<echo if:set="replace.portal.data.release.sql" message="sql/portal-data-release.sql" />
 
-			<replace-regex
+			<replaceregexp
+				file="sql/portal-data-release.sql"
 				if:set="replace.portal.data.release.sql"
-				replace.regex.file="sql/portal-data-release.sql"
-				replace.regex.pattern="${portal.data.release[@{from.branch.name}]}"
-				replace.regex.replacement="${portal.data.release[@{to.branch.name}]}"
-				replace.regex.tmp.file="${replace.regex.tmp.file}"
+				match="${portal.data.release[@{from.branch.name}]}"
+				replace="${portal.data.release[@{to.branch.name}]}"
 			/>
 		</sequential>
 	</macrodef>
@@ -343,31 +338,6 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 				<entry key="build.repository.private.url" value="${build.repository.private.url}" />
 				<entry key="build.repository.private.username" value="${build.repository.private.username}" />
 			</propertyfile>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="replace-regex">
-		<attribute name="replace.regex.file" />
-		<attribute name="replace.regex.pattern" />
-		<attribute name="replace.regex.replacement" />
-		<attribute name="replace.regex.tmp.file" />
-
-		<sequential>
-			<local name="replace.regex.changed" />
-
-			<replaceregexp
-				file="@{replace.regex.file}"
-				match="@{replace.regex.pattern}"
-				replace="@{replace.regex.replacement}"
-			/>
-
-			<uptodate
-				property="replace.regex.changed"
-				srcfile="@{replace.regex.tmp.file}"
-				targetfile="@{replace.regex.file}"
-			/>
-
-			<fail message="Unable to replace pattern &quot;@{replace.regex.pattern}&quot; with &quot;@{replace.regex.replacement}&quot; in @{replace.regex.file}." unless="replace.regex.changed" />
 		</sequential>
 	</macrodef>
 
