@@ -367,7 +367,7 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 		<fetch-portal
 			fetch.portal.local.branch.name="${public.branch.name}"
 			fetch.portal.remote.branch.name="${public.branch.name}"
-			fetch.portal.repository.name="liferay-portal"
+			fetch.portal.repository.name="liferay-portal-ee"
 			unless:set="portal.git.commit.available"
 		/>
 
