@@ -252,7 +252,8 @@ build.repository.private.username=${build.repository.private.username}
 
 git.working.branch.name=${git.working.branch.name}
 
-snapshot.bundle.base.url=${snapshot.bundle.base.url}</echo>
+snapshot.bundle.base.url=${snapshot.bundle.base.url}
+snapshot.bundle.url=${snapshot.bundle.base.url}snapshot-${git.working.branch.name}-private/latest/liferay-portal-tomcat-${git.working.branch.name}-private.7z</echo>
 
 			<!-- release.profile-dxp.properties -->
 
