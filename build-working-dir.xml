@@ -13,16 +13,16 @@
 		</not>
 	</condition>
 
-	<macrodef name="checkout-private-apps">
-		<attribute name="checkout.private.apps.branch" />
-		<attribute name="checkout.private.apps.dirs" />
-		<attribute name="checkout.private.apps.sha" />
-		<attribute name="checkout.private.branch.name" />
+	<macrodef name="checkout-dxp-apps">
+		<attribute name="checkout.dxp.apps.branch" />
+		<attribute name="checkout.dxp.apps.dirs" />
+		<attribute name="checkout.dxp.apps.sha" />
+		<attribute name="checkout.dxp.branch.name" />
 
 		<sequential>
 			<fetch-portal
-				fetch.portal.local.branch.name="git-branch-portal-private-apps"
-				fetch.portal.remote.branch.name="@{checkout.private.apps.branch}"
+				fetch.portal.local.branch.name="git-branch-portal-dxp-apps"
+				fetch.portal.remote.branch.name="@{checkout.dxp.apps.branch}"
 				fetch.portal.repository.name="liferay-portal-ee"
 			/>
 
@@ -31,18 +31,18 @@
 			<exec executable="git" failonerror="false" resultproperty="return.code">
 				<arg value="tag" />
 				<arg value="--force" />
-				<arg value="git-tag-portal-private-apps" />
-				<arg value="@{checkout.private.apps.sha}" />
+				<arg value="git-tag-portal-dxp-apps" />
+				<arg value="@{checkout.dxp.apps.sha}" />
 			</exec>
 
 			<exec executable="git">
 				<arg value="branch" />
 				<arg value="--delete" />
 				<arg value="--force" />
-				<arg value="git-branch-portal-private-apps" />
+				<arg value="git-branch-portal-dxp-apps" />
 			</exec>
 
-			<fail message="Please fetch the private branch from upstream before using this command.">
+			<fail message="Please fetch the DXP branch from upstream before using this command.">
 				<condition>
 					<not>
 						<equals arg1="${return.code}" arg2="0" />
@@ -50,25 +50,25 @@
 				</condition>
 			</fail>
 
-			<local name="checkout.private.apps.dirs.git" />
+			<local name="checkout.dxp.apps.dirs.git" />
 
-			<property name="checkout.private.apps.dirs.git" value="@{checkout.private.apps.dirs}" />
+			<property name="checkout.dxp.apps.dirs.git" value="@{checkout.dxp.apps.dirs}" />
 
 			<script language="javascript">
 				<![CDATA[
-					var checkoutPrivateAppsDirs = project.getProperty("checkout.private.apps.dirs.git");
+					var checkoutDXPAppsDirs = project.getProperty("checkout.dxp.apps.dirs.git");
 
-					project.setProperty("checkout.private.apps.dirs.git", checkoutPrivateAppsDirs.replace(",", " "));
+					project.setProperty("checkout.dxp.apps.dirs.git", checkoutDXPAppsDirs.replace(",", " "));
 				]]>
 			</script>
 
-			<echo>git checkout refs/tags/git-tag-portal-private-apps -- ${checkout.private.apps.dirs.git}</echo>
+			<echo>git checkout refs/tags/git-tag-portal-dxp-apps -- ${checkout.dxp.apps.dirs.git}</echo>
 
 			<exec executable="git" failonerror="true">
 				<arg value="checkout" />
-				<arg value="refs/tags/git-tag-portal-private-apps" />
+				<arg value="refs/tags/git-tag-portal-dxp-apps" />
 				<arg value="--" />
-				<arg line="${checkout.private.apps.dirs.git}" />
+				<arg line="${checkout.dxp.apps.dirs.git}" />
 			</exec>
 
 			<exec executable="git">
@@ -80,7 +80,7 @@
 			<exec executable="git">
 				<arg value="tag" />
 				<arg value="--delete" />
-				<arg value="git-tag-portal-private-apps" />
+				<arg value="git-tag-portal-dxp-apps" />
 			</exec>
 		</sequential>
 	</macrodef>
@@ -504,20 +504,20 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 		</exec>
 	</target>
 
-	<target if="working.dir.checkout.private.apps.project.names" name="checkout-private-projects">
+	<target if="working.dir.checkout.dxp.apps.project.names" name="checkout-private-projects">
 		<script language="javascript">
 			<![CDATA[
-				var workingDirCheckoutPrivateAppsProjectNames = project.getProperty("working.dir.checkout.private.apps.project.names");
+				var workingDirCheckoutDXPAppsProjectNames = project.getProperty("working.dir.checkout.dxp.apps.project.names");
 
-				var projectNames = workingDirCheckoutPrivateAppsProjectNames.split(",");
+				var projectNames = workingDirCheckoutDXPAppsProjectNames.split(",");
 
 				for (i = 0; i < projectNames.length; i++) {
-					var task = project.createTask("checkout-private-apps");
+					var task = project.createTask("checkout-dxp-apps");
 
-					task.setDynamicAttribute("checkout.private.apps.branch", project.getProperty("working.dir.checkout.private.apps." + projectNames[i] + ".branch"));
-					task.setDynamicAttribute("checkout.private.apps.dirs", project.getProperty("working.dir.checkout.private.apps." + projectNames[i] + ".dirs"));
-					task.setDynamicAttribute("checkout.private.apps.sha", project.getProperty("working.dir.checkout.private.apps." + projectNames[i] + ".sha"));
-					task.setDynamicAttribute("checkout.private.branch.name", project.getProperty("private.branch.name"));
+					task.setDynamicAttribute("checkout.dxp.apps.branch", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".branch"));
+					task.setDynamicAttribute("checkout.dxp.apps.dirs", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".dirs"));
+					task.setDynamicAttribute("checkout.dxp.apps.sha", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".sha"));
+					task.setDynamicAttribute("checkout.dxp.branch.name", project.getProperty("private.branch.name"));
 
 					task.perform();
 				}
