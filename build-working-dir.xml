@@ -17,7 +17,6 @@
 		<attribute name="checkout.dxp.apps.branch" />
 		<attribute name="checkout.dxp.apps.dirs" />
 		<attribute name="checkout.dxp.apps.sha" />
-		<attribute name="checkout.dxp.branch.name" />
 
 		<sequential>
 			<fetch-portal
@@ -517,7 +516,6 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 					task.setDynamicAttribute("checkout.dxp.apps.branch", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".branch"));
 					task.setDynamicAttribute("checkout.dxp.apps.dirs", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".dirs"));
 					task.setDynamicAttribute("checkout.dxp.apps.sha", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".sha"));
-					task.setDynamicAttribute("checkout.dxp.branch.name", project.getProperty("private.branch.name"));
 
 					task.perform();
 				}
