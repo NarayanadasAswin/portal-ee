@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 
 <project default="prepare-working-dir" xmlns:if="ant:if" xmlns:unless="ant:unless">
+	<property environment="env" />
+
 	<property file="working.dir.${user.name}.properties" />
 	<property file="working.dir.${env.COMPUTERNAME}.properties" />
 	<property file="working.dir.${env.HOST}.properties" />
