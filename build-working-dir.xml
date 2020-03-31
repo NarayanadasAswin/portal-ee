@@ -397,21 +397,23 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 		</exec>
 	</target>
 
-	<target if="working.dir.checkout.dxp.apps.project.names" name="checkout-private-projects">
+	<target name="checkout-private-projects">
 		<script language="javascript">
 			<![CDATA[
-				var workingDirCheckoutDXPAppsProjectNames = project.getProperty("working.dir.checkout.dxp.apps.project.names");
+				var workingDirCheckoutDXPAppsProjectNames = project.getProperty("working.dir.checkout.dxp.apps.project.names[" + project.getProperty("private.branch.name") + "]");
 
-				var projectNames = workingDirCheckoutDXPAppsProjectNames.split(",");
+				if (workingDirCheckoutDXPAppsProjectNames) {
+					var projectNames = workingDirCheckoutDXPAppsProjectNames.split(",");
 
-				for (i = 0; i < projectNames.length; i++) {
-					var task = project.createTask("checkout-dxp-apps");
+					for (i = 0; i < projectNames.length; i++) {
+						var task = project.createTask("checkout-dxp-apps");
 
-					task.setDynamicAttribute("checkout.dxp.apps.branch", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".branch"));
-					task.setDynamicAttribute("checkout.dxp.apps.dirs", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".dirs"));
-					task.setDynamicAttribute("checkout.dxp.apps.sha", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".sha"));
+						task.setDynamicAttribute("checkout.dxp.apps.branch", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".branch"));
+						task.setDynamicAttribute("checkout.dxp.apps.dirs", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".dirs"));
+						task.setDynamicAttribute("checkout.dxp.apps.sha", project.getProperty("working.dir.checkout.dxp.apps." + projectNames[i] + ".sha"));
 
-					task.perform();
+						task.perform();
+					}
 				}
 			]]>
 		</script>
