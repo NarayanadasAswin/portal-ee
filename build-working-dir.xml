@@ -442,7 +442,5 @@ testray.build.type=${testray.build.type[@{to.branch.name}]}</echo>
 		<prepare-working-dir-private
 			if:true="${prepare.working.dir.private}"
 		/>
-
-		<ant antfile="build.xml" target="setup-profile-private" />
 	</target>
 </project>
