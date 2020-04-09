@@ -59,7 +59,7 @@
 				<![CDATA[
 					var checkoutDXPAppsDirs = project.getProperty("checkout.dxp.apps.dirs.git");
 
-					project.setProperty("checkout.dxp.apps.dirs.git", checkoutDXPAppsDirs.replace(",", " "));
+					project.setProperty("checkout.dxp.apps.dirs.git", checkoutDXPAppsDirs.replace(/,/g, " "));
 				]]>
 			</script>
 
